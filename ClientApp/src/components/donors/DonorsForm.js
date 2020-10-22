@@ -24,7 +24,6 @@ const layout = {
     console.log('Failed:', errorInfo);
   };
 
-
   const validateMessages = {
     required: '${label} is required!',
     types: {
@@ -93,14 +92,28 @@ function AddressSelect() {
       <Form.Item label="Address" >
       <Input.Group>
         <Form.Item
-          style={{ width: '25%' }}
+          name={['donor', 'address', 'street']}
+          noStyle
+          rules={[{ required: true, message: 'Street is required' }]}
+        >
+          <Input placeholder="Input street" />
+        </Form.Item>
+
+        <Form.Item
+          name={['donor', 'address', 'city']}
+          noStyle
+          rules={[{ required: true, message: 'City is required' }]}
+        >
+          <Input placeholder="Input City" />
+        </Form.Item>
+
+        <Form.Item
           name={['donor', 'address', 'state']}
           noStyle
           rules={[{ required: true, message: 'State is required' }]}
         >
         <Select 
           showSearch 
-          style={{ width: 200 }}
           placeholder="Select State" 
           optionFilterProp="children"  
           filterOption={(input, option) =>
@@ -110,13 +123,15 @@ function AddressSelect() {
           {statesSelect}
         </Select>
         </Form.Item>
+
         <Form.Item
-          name={['donor', 'address', 'street']}
+          name={['donor', 'address', 'zip']}
           noStyle
-          rules={[{ required: true, message: 'Street is required' }]}
+          rules={[{ required: true, message: 'Zip is required' }]}
         >
-          <Input placeholder="Input street" />
+          <Input placeholder="Input Zip" maxLength={5}/>
         </Form.Item>
+        
       </Input.Group>
     </Form.Item>
   </div>
@@ -133,7 +148,7 @@ export function DonorsForm() {
               <Form.Item name={['donor', 'name']} label="Name" rules={[{ required: true }]}>
                   <Input />
               </Form.Item>
-              <Form.Item name={['donor', 'email']} label="Email" rules={[{ type: 'email' }]}>
+              <Form.Item name={['donor', 'email']} label="Email" rules={[{ type: 'email', required: true }]}>
                   <Input />
               </Form.Item>
               <Form.Item name={['donor', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
@@ -158,6 +173,16 @@ export function DonorsForm() {
                   <Option value={1}>Business</Option>
                 </Select>
               </Form.Item>
+
+              <Form.Item
+              name="phone"
+              label="Phone Number"
+              rules={[{ required: true, message: 'Please input your phone number!'}]}
+              >
+        <Input style={{ width: '100%' }} />
+      </Form.Item>
+
+
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                   <Button type="primary" htmlType="submit">
                   Submit
