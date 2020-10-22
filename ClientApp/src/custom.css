@@ -1,14 +1,24 @@
-/* Provide sufficient contrast against white background */
+:root {
+  --white: #fff;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 a {
   color: #0366d6;
 }
 
-code {
-  color: #E01A76;
+.center-container {
+  min-height: 75vh; 
+  min-width: 100vh;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.background-white {
+  background: var(white)
 }
+
