@@ -31,7 +31,7 @@ export class SideNav extends React.Component {
                                 <Link to="/">Home</Link>
                             </Menu.Item>
                             <Menu.Item key="2" icon={<DesktopOutlined />}> 
-                                <Link to="/donors">Donors</Link>
+                                <Link to="/donors-form">Donors</Link>
                             </Menu.Item>
                         </Menu>
                     </Sider>
