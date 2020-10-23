@@ -1,9 +1,10 @@
-﻿import React from 'react';
+﻿import React, { useState } from 'react';
 import { Form, 
   Input, 
   InputNumber, 
   Button,
-  Select } from 'antd';
+  Select,
+  message } from 'antd';
 import './Donors.css';
 import {states} from '../data/geo'
 
@@ -15,13 +16,15 @@ const layout = {
     wrapperCol: { span: 16 },
   };
 
-  const onFinish = values => {
-    values.donor.gender = values.gender === 'other' ? values.genderOther : values.gender
-    console.log('Success:', values);
+
+  const onSubmit = values => {
+    throw "exception"
   };
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
+  const onFinish = values => {
+    values.donor.gender = values.gender === 'other' ? values.genderOther : values.gender
+    message.success(`Successfully Added ${values.donor.name }!`);
+    console.log('Success:', values);
   };
 
   const validateMessages = {
@@ -114,6 +117,7 @@ function AddressSelect() {
         >
         <Select 
           showSearch 
+          style={{ width: 200 }}
           placeholder="Select State" 
           optionFilterProp="children"  
           filterOption={(input, option) =>
@@ -175,7 +179,7 @@ export function DonorsForm() {
               </Form.Item>
 
               <Form.Item
-              name="phone"
+              name={['donor', 'phone']} 
               label="Phone Number"
               rules={[{ required: true, message: 'Please input your phone number!'}]}
               >
@@ -184,7 +188,7 @@ export function DonorsForm() {
 
 
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                  <Button type="primary" htmlType="submit">
+                  <Button type="primary" htmlType="submit" onSubmit={onSubmit}>
                   Submit
                   </Button>
               </Form.Item>
