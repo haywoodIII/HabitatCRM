@@ -1,7 +1,5 @@
 ﻿import React from 'react';
-import { Row, Col } from 'antd';
 import { Form, 
-    Input, 
     InputNumber, 
     Button,
     message } from 'antd';
@@ -23,14 +21,6 @@ const tailLayout = {
     },
 };
 
-const onFinish = values => {
-    message.success(`Successfully Added ${values.donation.name }!`);
-    console.log('Success:', values);
-    };
-
-const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-    };
 
 const validateMessages = {
     required: '${label} is required!',
@@ -45,6 +35,18 @@ const validateMessages = {
 
 export function DonationsForm(){
 
+    const [form] = Form.useForm();
+
+    const onFinish = values => {
+        message.success(`Successfully Added ${values.donation.amount} dollar donation!`);
+        form.resetFields();
+        console.log('Success:', values);
+        };
+    
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+        };
+
     return (
         <Form
         {...layout}
@@ -55,11 +57,11 @@ export function DonationsForm(){
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         validateMessages={validateMessages}
+        form={form}
       >
 
-        <Form.Item label="Amount:" name={['donation', 'amount']} defaultValue={0} rules={[{ type: 'number', required: true }]}>
+        <Form.Item label="Amount:" name={['donation', 'amount']} rules={[{ type: 'number', required: true }]}>
             <InputNumber
-                defaultValue={0}
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
             />
@@ -70,23 +72,7 @@ export function DonationsForm(){
             Submit
           </Button>
         </Form.Item>
+
       </Form>
-    )
-}
-
-
-
-
-export function DonationsPage() {
-    return (   
-        <Row>
-            <Col span={8}>
-                <h2>Add a Donation</h2>
-                <br/>
-                <DonationsForm></DonationsForm>
-            </Col>
-            <Col span={8}>col-8</Col>
-            <Col span={8}>col-8</Col>
-        </Row>
     )
 }

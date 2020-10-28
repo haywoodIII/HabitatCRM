@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React from 'react';
 import { Form, 
   Input, 
   InputNumber, 
@@ -12,14 +12,8 @@ import {states} from '../data/geo'
 const { Option } = Select;
 
 const layout = {
-    labelCol: { span: 8 },
+    labelCol: { span: 6 },
     wrapperCol: { span: 16 },
-  };
-
-  const onFinish = values => {
-    values.donor.gender = values.gender === 'other' ? values.genderOther : values.gender
-    message.success(`Successfully Added ${values.donor.name }!`);
-    console.log('Success:', values);
   };
 
   const validateMessages = {
@@ -138,57 +132,69 @@ function AddressSelect() {
 }
 
 export function DonorsForm() {
+  
+  const [form] = Form.useForm();
+
+  const onFinish = values => {
+    values.donor.gender = values.gender === 'other' ? values.genderOther : values.gender
+    message.success(`Successfully Added ${values.donor.name }!`);
+    form.resetFields();
+    console.log('Success:', values);
+  };
+
+  const onReset = () => {
+    form.resetFields();
+  };
 
   return (
-   <div>
-    <h2>Add a Donor</h2>
-        <div className="center-container">
-            <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
-              <Form.Item name={['donor', 'name']} label="Name" rules={[{ required: true }]}>
-                  <Input />
-              </Form.Item>
-              <Form.Item name={['donor', 'email']} label="Email" rules={[{ type: 'email', required: true }]}>
-                  <Input />
-              </Form.Item>
-              <Form.Item name={['donor', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
-                  <InputNumber />
-              </Form.Item>
-              <AddressSelect/>
-              <GenderSelect/>
-              <Form.Item
-                name={['donor', 'type']} 
-                label="Donor Type:"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select..."
-                  allowClear
-                >
-                  <Option value={0}>Individual</Option>
-                  <Option value={1}>Business</Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item
-              name={['donor', 'phone']} 
-              label="Phone Number"
-              rules={[{ required: true, message: 'Please input your phone number!'}]}
-              >
-        <Input style={{ width: '100%' }} />
+    <Form {...layout} form={form} onFinish={onFinish} validateMessages={validateMessages}>
+      <Form.Item name={['donor', 'name']} label="Name" rules={[{ required: true }]}>
+          <Input />
+      </Form.Item>
+      <Form.Item name={['donor', 'email']} label="Email" rules={[{ type: 'email', required: true }]}>
+          <Input />
+      </Form.Item>
+      <Form.Item name={['donor', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
+          <InputNumber />
+      </Form.Item>
+      <AddressSelect/>
+      <GenderSelect/>
+      <Form.Item
+        name={['donor', 'type']} 
+        label="Donor Type:"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Select
+          placeholder="Select..."
+          allowClear
+        >
+          <Option value={0}>Individual</Option>
+          <Option value={1}>Business</Option>
+        </Select>
       </Form.Item>
 
+      <Form.Item
+      name={['donor', 'phone']} 
+      label="Phone Number"
+      rules={[{ required: true, message: 'Please input your phone number!'}]}
+      >
+      <Input style={{ width: '100%' }} />
+      </Form.Item>
 
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                  <Button type="primary" htmlType="submit">
-                  Submit
-                  </Button>
-              </Form.Item>
-            </Form >
-        </div>
-   </div>
+      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+          <Button type="primary" htmlType="submit" style={{marginRight: 10}}>
+          Submit
+          </Button>
+
+          <Button htmlType="button" onClick={onReset}>Reset</Button>
+
+      </Form.Item>
+
+    </Form >
+    
   );
 }

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Table, Tag, Space, Button, Modal } from 'antd';
 import { Link } from "react-router-dom"; 
 import {useParams} from "react-router-dom";
-import {DonationsForm} from './DonationsPage'
+import {DonationsForm} from './DonationsForm'
+import {DonorsForm} from './DonorsForm'
 
-const { Column, ColumnGroup } = Table;
+const { Column} = Table;
 
 const dataSource = [
     {
@@ -44,44 +45,6 @@ function deleteRow(id, e) {
     e.preventDefault();
     console.log(id);
     }
-
-
-export function DonarsModal(props) {
-
-  let [donationsVisible, setDonationsVisible] = useState(false);
-
-
-  const handleOk = e => {
-    console.log(e);
-    setDonationsVisible(true);
-  };
-
-    
-  const handleCancel = e => {
-      console.log(e);
-      setDonationsVisible(false);
-  };
-
-
-  return (
-      <>
-        <Button type="primary" onClick={() => setDonationsVisible(props.visible)}>
-          Open Modal
-        </Button>
-        <Modal
-          title="Add Donations"
-          visible={donationsVisible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Modal>
-      </>
-    );
-}
-
 
 function DonorsTable(){
 
@@ -140,12 +103,33 @@ function DonorsTable(){
 }
 
 export function DonorsPage() {
+
+  let [donorsModalVisible, setDonorsModalVisible] = useState(false);
+
+  const handleDonorsModalCancel = e => {
+      console.log(e);
+      setDonorsModalVisible(false);
+  };
+
     return (
         <>
         <div style={{ marginBottom: 16 }}>
-          <Button type="primary" >
-            <Link to="/donors-form">Add Donors</Link>
+          <Button type="primary" onClick={() => setDonorsModalVisible(true)}>
+            Add Donor
           </Button>
+          <Modal
+            title="Add Donors"
+            visible={donorsModalVisible}
+            onCancel={handleDonorsModalCancel}
+            footer={[
+              <Button key="back" onClick={handleDonorsModalCancel}>
+                Return
+              </Button>,
+            ]}
+          >
+            <DonorsForm/>
+          </Modal>
+
         </div>
             <DonorsTable/>
         </>
