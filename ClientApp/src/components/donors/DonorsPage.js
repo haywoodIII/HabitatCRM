@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Tag, Space, Button, Modal } from 'antd';
+import { Popconfirm, Table, Tag, Space, Button, Modal } from 'antd';
 import {DonationsForm} from './DonationsForm'
 import { DonationsModal } from './DonationsModal';
 
@@ -109,8 +109,15 @@ function DonorsTable(){
           <DonationsForm/>
         </Modal>
       </>
-          <a href="#" onClick={(e) => updateRow(record.id, e)}>Update</a>
-          <a href="#" onClick={(e) => deleteRow(record.id, e)}>Delete</a>
+          <a href="#" onClick={(e) => updateRow(record.key, e)}>Update</a>
+          <Popconfirm
+            title={`Are you sure delete ${record.name}?`}
+            onConfirm={(e) => deleteRow(record.key, e)}
+            okText="Yes"
+            cancelText="No"
+          >
+          <a href="#">Delete</a>
+        </Popconfirm>
         </Space>
       )}
       >
