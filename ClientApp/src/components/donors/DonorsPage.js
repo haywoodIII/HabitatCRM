@@ -3,7 +3,7 @@ import { Table, Tag, Space, Button, Modal } from 'antd';
 import {DonationsForm} from './DonationsForm'
 import { DonationsModal } from './DonationsModal';
 
-const { Column} = Table;
+const { Column, ColumnGroup} = Table;
 
 const dataSource = [
     {
@@ -17,7 +17,8 @@ const dataSource = [
       phone: '585-396-3584',
       email: 'mike@test.com',
       type: 'business',
-      gender: 'Male'
+      gender: 'Male',
+      donationTotal: 5
     },
     {
       key: '2',
@@ -30,7 +31,8 @@ const dataSource = [
       phone: '585-396-3584',
       email: 'john@test.com',
       type: 'individual',
-      gender: 'Male'
+      gender: 'Male',
+      donationTotal: 4
     },
     {
       key: '3',
@@ -43,7 +45,8 @@ const dataSource = [
       phone: '585-396-3584',
       email: 'monica@test.com',
       type: 'individual',
-      gender: 'Female'
+      gender: 'Female',
+      donationTotal: 10
     },
   ];
 
@@ -70,10 +73,12 @@ function DonorsTable(){
     <Table dataSource={dataSource}>
       <Column title='Name' dataIndex='name' key='name' render={text => <a>{text}</a>}></Column>
       <Column title='Email' dataIndex='email' key='email'></Column>
-      <Column title='Street' dataIndex='street' key='street'></Column>
-      <Column title='City' dataIndex='city' key='city'></Column>
-      <Column title='State' dataIndex='state' key='state'></Column>
-      <Column title='Zip' dataIndex='zip' key='zip'></Column>
+      <ColumnGroup title="Address">
+        <Column title='Street' dataIndex='street' key='street'></Column>
+        <Column title='City' dataIndex='city' key='city'></Column>
+        <Column title='State' dataIndex='state' key='state'></Column>
+        <Column title='Zip' dataIndex='zip' key='zip'></Column>
+      </ColumnGroup>
       <Column 
       title='Donor Type' 
       dataIndex='type' 
@@ -81,6 +86,7 @@ function DonorsTable(){
       render = {(type, color) => <Tag color={color = type === "business" ? "blue": "green"} key={type}>{type.toUpperCase()}</Tag>}
       >
       </Column>
+      <Column title='Total Donations' dataIndex='donationTotal' key='donationTotal'></Column>
       <Column 
       title='Action' 
       key='action'

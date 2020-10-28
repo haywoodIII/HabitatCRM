@@ -7,7 +7,7 @@ import { Form,
 
 const layout = {
     labelCol: {
-        span: 5,
+        span: 4,
     },
     wrapperCol: {
         span: 16,
@@ -16,7 +16,6 @@ const layout = {
 
 const tailLayout = {
     wrapperCol: {
-      
         span: 16,
     },
 };
