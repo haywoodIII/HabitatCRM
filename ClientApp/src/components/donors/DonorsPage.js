@@ -1,10 +1,11 @@
 import React from 'react';
 import { Table, Tag, Space, Button } from 'antd';
 import { Link } from "react-router-dom"; 
+import {useParams} from "react-router-dom";
 
 const dataSource = [
     {
-      key: '1',
+      id: '1',
       name: 'Mike',
       age: 32,
       street: '10 Downing Street',
@@ -17,7 +18,7 @@ const dataSource = [
       gender: 'Male'
     },
     {
-      key: '2',
+      id: '2',
       name: 'John',
       age: 42,
       street: '10 Downing Street',
@@ -95,10 +96,10 @@ const columns = [
         render: (text, record) => (
           <Space size="middle">
             <a href="#">
-                <Link to="/donors-form">Donations</Link>
+                <Link to={`/donations/${record.id}`}>Donations</Link>
             </a>
-            <a href="#" onClick={(e) => updateRow(record.key, e)}>Update</a>
-            <a href="#" onClick={(e) => deleteRow(record.key, e)}>Delete</a>
+            <a href="#" onClick={(e) => updateRow(record.id, e)}>Update</a>
+            <a href="#" onClick={(e) => deleteRow(record.id, e)}>Delete</a>
           </Space>
         ),
       },

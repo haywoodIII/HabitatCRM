@@ -16,11 +16,6 @@ const layout = {
     wrapperCol: { span: 16 },
   };
 
-
-  const onSubmit = values => {
-    throw "exception"
-  };
-
   const onFinish = values => {
     values.donor.gender = values.gender === 'other' ? values.genderOther : values.gender
     message.success(`Successfully Added ${values.donor.name }!`);
@@ -188,7 +183,7 @@ export function DonorsForm() {
 
 
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                  <Button type="primary" htmlType="submit" onSubmit={onSubmit}>
+                  <Button type="primary" htmlType="submit">
                   Submit
                   </Button>
               </Form.Item>
