@@ -43,7 +43,8 @@ const validateMessages = {
     },
 };
 
-function DonationsForm(){
+export function DonationsForm(){
+
     return (
         <Form
         {...layout}
@@ -62,18 +63,6 @@ function DonationsForm(){
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
             />
-        </Form.Item>
-
-        <Form.Item
-          label="Name:"
-          name={['donation', 'name']}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Input />
         </Form.Item>
   
         <Form.Item {...tailLayout}>

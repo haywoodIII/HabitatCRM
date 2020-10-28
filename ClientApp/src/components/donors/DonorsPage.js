@@ -1,7 +1,10 @@
-import React from 'react';
-import { Table, Tag, Space, Button } from 'antd';
+import React, { useState } from 'react';
+import { Table, Tag, Space, Button, Modal } from 'antd';
 import { Link } from "react-router-dom"; 
 import {useParams} from "react-router-dom";
+import {DonationsForm} from './DonationsPage'
+
+const { Column, ColumnGroup } = Table;
 
 const dataSource = [
     {
@@ -42,78 +45,109 @@ function deleteRow(id, e) {
     console.log(id);
     }
 
-const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: text => <a>{text}</a>,
-    },
-    {
-        title: 'Email',
-        dataIndex: 'email',
-        key: 'email',
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: 'Street',
-      dataIndex: 'street',
-      key: 'street',
-    },
-    {
-        title: 'City',
-        dataIndex: 'city',
-        key: 'city',
-    },
-    {
-        title: 'State',
-        dataIndex: 'state',
-        key: 'state',
-    },
-    {
-        title: 'Zip',
-        dataIndex: 'zip',
-        key: 'zip',
-    },
-    {
-      title: 'Donor Type',
-      key: 'type',
-      dataIndex: 'type',
-      render: (type, color) => <Tag color={color = type === "business" ? "blue": "green"} key={type}>{type.toUpperCase()}</Tag>
-    },
-    {
-        title: 'Gender',
-        dataIndex: 'gender',
-        key: 'gender',
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => (
-          <Space size="middle">
-            <a href="#">
-                <Link to={`/donations/${record.id}`}>Donations</Link>
-            </a>
-            <a href="#" onClick={(e) => updateRow(record.id, e)}>Update</a>
-            <a href="#" onClick={(e) => deleteRow(record.id, e)}>Delete</a>
-          </Space>
-        ),
-      },
-    ];
+
+export function DonarsModal(props) {
+
+  let [donationsVisible, setDonationsVisible] = useState(false);
+
+
+  const handleOk = e => {
+    console.log(e);
+    setDonationsVisible(true);
+  };
+
+    
+  const handleCancel = e => {
+      console.log(e);
+      setDonationsVisible(false);
+  };
+
+
+  return (
+      <>
+        <Button type="primary" onClick={() => setDonationsVisible(props.visible)}>
+          Open Modal
+        </Button>
+        <Modal
+          title="Add Donations"
+          visible={donationsVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Modal>
+      </>
+    );
+}
+
+
+function DonorsTable(){
+
+  let [donationsVisible, setDonationsVisible] = useState(false);
+
+  const handleDonationsCancel = e => {
+      console.log(e);
+      setDonationsVisible(false);
+  };
+
+  return (
+    <Table dataSource={dataSource}>
+      <Column title='Name' dataIndex='name' key='name' render={text => <a>{text}</a>}></Column>
+      <Column title='Email' dataIndex='email' key='email'></Column>
+      <Column title='Street' dataIndex='street' key='street'></Column>
+      <Column title='City' dataIndex='city' key='city'></Column>
+      <Column title='State' dataIndex='state' key='state'></Column>
+      <Column title='Zip' dataIndex='zip' key='zip'></Column>
+      <Column 
+      title='Donor Type' 
+      dataIndex='type' 
+      key='type' 
+      render = {(type, color) => <Tag color={color = type === "business" ? "blue": "green"} key={type}>{type.toUpperCase()}</Tag>}
+      >
+      </Column>
+      <Column 
+      title='Action' 
+      key='action'
+      render = {(_, record) => (
+        <Space size="middle">
+      <>
+        <Button type="primary" onClick={() => setDonationsVisible(true)}>
+          Add Donation
+        </Button>
+        <Modal
+          title="Add Donations"
+          visible={donationsVisible}
+          onCancel={handleDonationsCancel}
+          footer={[
+            <Button key="back" onClick={handleDonationsCancel}>
+              Return
+            </Button>,
+          ]}
+        >
+          <DonationsForm/>
+        </Modal>
+      </>
+          <a href="#" onClick={(e) => updateRow(record.id, e)}>Update</a>
+          <a href="#" onClick={(e) => deleteRow(record.id, e)}>Delete</a>
+        </Space>
+      )}
+      >
+      </Column>
+    </Table>
+  );
+}
 
 export function DonorsPage() {
     return (
-        <div>
+        <>
         <div style={{ marginBottom: 16 }}>
           <Button type="primary" >
             <Link to="/donors-form">Add Donors</Link>
           </Button>
         </div>
-            <Table columns={columns} dataSource={dataSource}/>
-        </div>
+            <DonorsTable/>
+        </>
     );
 }
