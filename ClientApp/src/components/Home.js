@@ -20,14 +20,14 @@ const title = {
 const campaignSelect = (
     <>
       <Select style={{ width: 120 }}
+      defaultValue="Current Year"
       showSearch
       style={{ width: 200 }}
-      placeholder="Select a Campaign"
       optionFilterProp="children"
       >
         <Option value="jack">5k (October 2020)</Option>
         <Option value="lucy">Women's Build</Option>
-        <Option value="Yiminghe">2020 Year</Option>
+        <Option value="Yiminghe">Current Year</Option>
       </Select>
     </>
 )
@@ -37,18 +37,9 @@ export function Home (){
     <Row gutter={16}>
       <Col flex={3}>
         <Title style={{marginBottom: 25, opacity:"35%", fontWeight:"10"}}>Dashboard</Title>
+        
         <Card className="stack-card">
-          <Card.Grid style={gridStyle} hoverable={false}>
-            <span style={title}>Donor Rentention</span>
-            <br/>
-            <Progress type="circle" percent={34} />
-            <br/>
-            <span className="ant-statistic-title">59 of 169 Donors Retained</span>
-          </Card.Grid>
-        </Card>
-
-        <Card className="stack-card">
-          <Card.Grid style={gridStyle} hoverable={false}>
+          <Card.Grid style={{ width: '50%', textAlign: 'center'}} hoverable={false}>
               <span style={title}>Monthly Donations</span>
               <Statistic
                 value={120}
@@ -56,6 +47,25 @@ export function Home (){
                 valueStyle={{ color: '#3f8600' }}
                 prefix={<DollarOutlined style={{verticalAlign: "baseline"}}/>}
               />
+          </Card.Grid>
+          <Card.Grid style={{ width: '50%', textAlign: 'center'}} hoverable={false}>
+              <span style={title}>Yearly Donations</span>
+              <Statistic
+                value={35000}
+                precision={2}
+                valueStyle={{ color: '#3f8600' }}
+                prefix={<DollarOutlined style={{verticalAlign: "baseline"}}/>}
+              />
+          </Card.Grid>
+        </Card>
+
+        <Card className="stack-card">
+          <Card.Grid style={gridStyle} hoverable={false}>
+            <span style={title}>Donor Rentention</span>
+            <br/>
+            <Progress type="circle" percent={34} />
+            <br/>
+            <span className="ant-statistic-title">59 of 169 Donors Retained</span>
           </Card.Grid>
         </Card>
 
