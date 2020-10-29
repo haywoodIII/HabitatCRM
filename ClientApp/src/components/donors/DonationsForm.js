@@ -37,7 +37,7 @@ export function DonationsForm(){
     const [form] = Form.useForm();
 
     const onFinish = values => {
-        message.success(`Successfully Added ${values.donation.amount} dollar donation!`);
+        message.success("Donation added!");
         form.resetFields();
         console.log('Success:', values);
         };

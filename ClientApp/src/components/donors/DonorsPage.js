@@ -107,7 +107,7 @@ function DonorsTable(){
           <DonationsForm/>
         </Modal>
       </>
-          <DonorsModal text="Update Donor" initialValues={record}/>
+          <DonorsModal text="Update" initialValues={record}/>
           <Popconfirm
             title={`Are you sure delete ${record.name}?`}
             onConfirm={(e) => deleteRow(record.key, e)}
@@ -130,7 +130,7 @@ export function DonorsPage() {
     return (
         <>
         <div style={{ marginBottom: 16 }}>
-        <DonorsModal text="Add Donors"/>
+        <DonorsModal text="Add Donor"/>
         </div>
             <DonorsTable/>
         </>

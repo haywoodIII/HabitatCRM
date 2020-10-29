@@ -1,5 +1,6 @@
 :root {
   --white: #fff;
+  --money-green: #3f8600
 }
 
 body {
@@ -22,4 +23,10 @@ a {
 .background-white {
   background: var(white)
 }
+
+.stack-card {
+  margin-top: 50px;
+}
+
+
 
