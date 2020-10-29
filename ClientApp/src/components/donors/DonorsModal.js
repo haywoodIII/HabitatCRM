@@ -2,21 +2,21 @@ import React, { useState }  from 'react';
 import { Button, Modal } from 'antd';
 import {DonorsForm} from './DonorsForm'
 
-export function DonationsModal() {
+export function DonorsModal(props) {
     let [donorsModalVisible, setDonorsModalVisible] = useState(false);
 
     const handleDonorsModalCancel = e => {
-        console.log(e);
+       
         setDonorsModalVisible(false);
     };
 
     return (
         <>
-        <Button type="primary" onClick={() => setDonorsModalVisible(true)}>
-            Add Donor
+        <Button onClick={() => setDonorsModalVisible(true)}>
+            {props.text}
         </Button>
         <Modal
-            title="Add Donors"
+            title={props.text}
             visible={donorsModalVisible}
             onCancel={handleDonorsModalCancel}
             footer={[
@@ -25,7 +25,7 @@ export function DonationsModal() {
             </Button>,
             ]}
         >
-            <DonorsForm/>
+            <DonorsForm initialValues={props.initialValues}/>
         </Modal>
       </>
     );

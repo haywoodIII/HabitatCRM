@@ -31,7 +31,7 @@ function GenderSelect() {
   return (
     <div >           
       <Form.Item
-      name="gender"
+      name={['donor', 'gender']}
       label="Gender"
   
       rules={[
@@ -44,19 +44,19 @@ function GenderSelect() {
         placeholder="Select..."
         allowClear
       >
-        <Option value="male">Male</Option>
-        <Option value="female">Female</Option>
-        <Option value="other">Other</Option>
+        <Option value="Male">Male</Option>
+        <Option value="Female">Female</Option>
+        <Option value="Other">Other</Option>
       </Select>
     </Form.Item>
     <Form.Item
       noStyle
-      shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
+      shouldUpdate={(prevValues, currentValues) => prevValues !== currentValues}
     >
       {({ getFieldValue }) => {
-        return getFieldValue("gender") === 'other' ? (
+        return getFieldValue(['donor', 'gender']) === 'Other' ? (
           <Form.Item
-            name="genderOther"
+            name={['donor', 'genderOther']}
             label="Enter Gender: "
             rules ={[
               {
@@ -131,23 +131,23 @@ function AddressSelect() {
   );
 }
 
-export function DonorsForm() {
+export function DonorsForm(props) {
   
   const [form] = Form.useForm();
 
   const onFinish = values => {
-    values.donor.gender = values.gender === 'other' ? values.genderOther : values.gender
     message.success(`Successfully Added ${values.donor.name }!`);
     form.resetFields();
     console.log('Success:', values);
   };
 
   const onReset = () => {
+    console.log(props.initialValues);
     form.resetFields();
   };
 
   return (
-    <Form {...layout} form={form} onFinish={onFinish} validateMessages={validateMessages}>
+    <Form {...layout} form={form} onFinish={onFinish} validateMessages={validateMessages} initialValues={props.initialValues}>
       <Form.Item name={['donor', 'name']} label="Name" rules={[{ required: true }]}>
           <Input />
       </Form.Item>

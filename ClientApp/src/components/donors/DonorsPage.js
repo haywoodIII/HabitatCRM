@@ -1,68 +1,66 @@
 import React, { useState } from 'react';
 import { Popconfirm, Table, Tag, Space, Button, Modal } from 'antd';
 import {DonationsForm} from './DonationsForm'
-import { DonationsModal } from './DonationsModal';
+import { DonorsModal } from './DonorsModal';
 
 const { Column, ColumnGroup} = Table;
 
 const dataSource = [
     {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      street: '10 Downing Street',
-      city: 'Newark',
-      state: 'NY', 
-      zip: '14424',
-      phone: '585-396-3584',
-      email: 'mike@test.com',
-      type: 'business',
-      gender: 'Male',
-      donationTotal: 5
+      "donor": {
+        donorId: '1',
+        name: 'Pioneer Library',
+        age: 32,
+        "address": {
+          street: '10 Downing Street',
+          city: 'Canandaigua',
+          state: 'NY', 
+          zip: '14424',
+        },
+        phone: '585-396-3584',
+        email: 'pioneer@test.com',
+        type: 'Business',
+        gender: 'Other',
+        genderOther: 'Non-Binary',
+        donationTotal: 5
+      }
     },
     {
-      key: '2',
-      name: 'John',
-      age: 42,
-      street: '10 Downing Street',
-      city: 'Newark',
-      state: 'NY', 
-      zip: '14424',
-      phone: '585-396-3584',
-      email: 'john@test.com',
-      type: 'individual',
-      gender: 'Male',
-      donationTotal: 4
-    },
-    {
-      key: '3',
-      name: 'Monica',
-      age: 55,
-      street: '11 Park Street',
-      city: 'Newark',
-      state: 'NY', 
-      zip: '14424',
-      phone: '585-396-3584',
-      email: 'monica@test.com',
-      type: 'individual',
-      gender: 'Female',
-      donationTotal: 10
+      "donor": {
+        donorId: '2',
+        name: 'John',
+        age: 42,
+        "address": {
+          street: '101 Main Street',
+          city: 'Canandaigua',
+          state: 'NY', 
+          zip: '14424',
+        },
+        phone: '585-396-3584',
+        email: 'john@test.com',
+        type: 'Individual',
+        gender: 'Male',
+        donationTotal: 4
+      }
     },
   ];
 
-function updateRow(key, e) {
-    e.preventDefault();
-    console.log(key);
-    }
 
-function deleteRow(key, e) {
-    e.preventDefault();
-    console.log(key);
-    }
 
 function DonorsTable(){
 
   let [donationsVisible, setDonationsVisible] = useState(false);
+
+  const updateRow = (key, e) => {
+    e.preventDefault();
+    setDonationsVisible(true)
+    console.log(key);
+    }
+
+  const deleteRow = (key, e) => {
+    e.preventDefault();
+    console.log(key);
+    }
 
   const handleDonationsCancel = e => {
       console.log(e);
@@ -70,30 +68,30 @@ function DonorsTable(){
   };
 
   return (
-    <Table dataSource={dataSource}>
-      <Column title='Name' dataIndex='name' key='name' render={text => <a>{text}</a>}></Column>
-      <Column title='Email' dataIndex='email' key='email'></Column>
+    <Table dataSource={dataSource} rowKey={r => r.donor.donorId}>
+      <Column title='Name' dataIndex={['donor', 'name']} key='name' render={text => <a>{text}</a>}></Column>
+      <Column title='Email' dataIndex={['donor', 'email']} ></Column>
       <ColumnGroup title="Address">
-        <Column title='Street' dataIndex='street' key='street'></Column>
-        <Column title='City' dataIndex='city' key='city'></Column>
-        <Column title='State' dataIndex='state' key='state'></Column>
-        <Column title='Zip' dataIndex='zip' key='zip'></Column>
+        <Column title='Street' dataIndex={['donor', 'address', 'street']} ></Column>
+        <Column title='City' dataIndex={['donor', 'address', 'city']} ></Column>
+        <Column title='State' dataIndex={['donor', 'address', 'state']} ></Column>
+        <Column title='Zip' dataIndex={['donor', 'address', 'zip']} ></Column>
       </ColumnGroup>
       <Column 
       title='Donor Type' 
-      dataIndex='type' 
+      dataIndex={['donor', 'type']} 
       key='type' 
-      render = {(type, color) => <Tag color={color = type === "business" ? "blue": "green"} key={type}>{type.toUpperCase()}</Tag>}
+      render = {(type, color) => <Tag color={color = type === "Business" ? "blue": "green"} key={type}>{type.toUpperCase()}</Tag>}
       >
       </Column>
-      <Column title='Total Donations' dataIndex='donationTotal' key='donationTotal'></Column>
+      <Column title='Total Donations' dataIndex={['donor', 'donationTotal']} key='donationTotal'></Column>
       <Column 
       title='Action' 
       key='action'
       render = {(_, record) => (
         <Space size="middle">
       <>
-        <Button type="primary" onClick={() => setDonationsVisible(true)}>
+        <Button onClick={() => setDonationsVisible(true)}>
           Add Donation
         </Button>
         <Modal
@@ -109,14 +107,16 @@ function DonorsTable(){
           <DonationsForm/>
         </Modal>
       </>
-          <a href="#" onClick={(e) => updateRow(record.key, e)}>Update</a>
+          <DonorsModal text="Update Donor" initialValues={record}/>
           <Popconfirm
             title={`Are you sure delete ${record.name}?`}
             onConfirm={(e) => deleteRow(record.key, e)}
             okText="Yes"
             cancelText="No"
           >
-          <a href="#">Delete</a>
+        <Button danger>
+          Delete
+        </Button>
         </Popconfirm>
         </Space>
       )}
@@ -130,7 +130,7 @@ export function DonorsPage() {
     return (
         <>
         <div style={{ marginBottom: 16 }}>
-        <DonationsModal/>
+        <DonorsModal text="Add Donors"/>
         </div>
             <DonorsTable/>
         </>
