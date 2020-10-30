@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Popconfirm, Table, Tag, Space, Button, Modal } from 'antd';
 import {DonationsForm} from './DonationsForm'
 import { DonorsModal } from './DonorsModal';
+import { CampaignModal } from './Campaign';
 
 const { Column, ColumnGroup} = Table;
 
@@ -131,6 +132,7 @@ export function DonorsPage() {
         <>
         <div style={{ marginBottom: 16 }}>
         <DonorsModal text="Add Donor"/>
+        <CampaignModal/>
         </div>
             <DonorsTable/>
         </>
