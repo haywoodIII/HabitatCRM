@@ -23,6 +23,30 @@ const recentDonors = [
       date: '10/30/2020'
     }
   },
+  {
+    "donor": {
+      donorId: '3',
+      name: 'TD Dholkia',
+      donation: 20.00,
+      date: '10/30/2020'
+    }
+  },
+  {
+    "donor": {
+      donorId: '4',
+      name: 'James Rowe',
+      donation: 20.00,
+      date: '10/30/2020'
+    }
+  },
+  {
+    "donor": {
+      donorId: '5',
+      name: 'Don Cotter',
+      donation: 20.00,
+      date: '10/30/2020'
+    }
+  },
 ];
 
 const gridStyle = {
@@ -65,7 +89,7 @@ export function Home (){
         <Title style={{marginBottom: 25, opacity:"35%", fontWeight:"10"}}>Dashboard</Title>
         
         <Card className="stack-card">
-          <Card.Grid style={{ width: '33%', textAlign: 'center'}} hoverable={false}>
+          <Card.Grid style={{ width: '34%', textAlign: 'center'}} hoverable={false}>
                 <span style={title}>Daily Donations</span>
                 <Statistic
                   value={0}
@@ -123,6 +147,7 @@ export function Home (){
       </Col>
       <Col flex={2} style={{paddingTop: 120}}>
       <List
+        header={<div>Recent Donations</div>}
         itemLayout="horizontal"
         dataSource={recentDonors}
         renderItem={item => (

@@ -2,12 +2,14 @@
 import { Form, 
     InputNumber, 
     Button,
-    message } from 'antd';
+    message,
+    Select } from 'antd';
 
+const { Option, OptGroup } = Select;
 
 const layout = {
     labelCol: {
-        span: 4,
+        span: 5,
     },
     wrapperCol: {
         span: 16,
@@ -61,9 +63,23 @@ export function DonationsForm(){
 
         <Form.Item label="Amount:" name={['donation', 'amount']} rules={[{ type: 'number', required: true }]}>
             <InputNumber
+                min={0}
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
             />
+        </Form.Item>
+
+        <Form.Item label="Campaign:" name={['donation', 'campaign']}>
+            <Select style={{ width: 120 }}
+            placeholder="Not Required..."
+            showSearch
+            style={{ width: 200 }}
+            optionFilterProp="children"
+            >
+                <Option value="guid1">No Campaign</Option>
+                <Option value="guid2">5k</Option>
+                <Option value="guid3">Women's Build</Option>
+            </Select>
         </Form.Item>
   
         <Form.Item {...tailLayout}>
