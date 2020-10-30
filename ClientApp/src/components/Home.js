@@ -4,7 +4,7 @@ import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import { DollarOutlined} from '@ant-design/icons';
 
 const { Title } = Typography;
-const { Option } = Select;
+const { Option, OptGroup } = Select;
 
 const recentDonors = [
   {
@@ -44,9 +44,16 @@ const campaignSelect = (
       style={{ width: 200 }}
       optionFilterProp="children"
       >
-        <Option value="jack">5k (October 2020)</Option>
+      <OptGroup label="2020">
+        <Option value="jack">5k</Option>
         <Option value="lucy">Women's Build</Option>
         <Option value="Yiminghe">Current Year</Option>
+      </OptGroup>
+      <OptGroup label="2019">
+        <Option value="jack">5k</Option>
+        <Option value="lucy">Women's Build</Option>
+        <Option value="Yiminghe">2019 Year</Option>
+      </OptGroup>
       </Select>
     </>
 )
