@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {useParams, Link} from "react-router-dom";
 import { Popconfirm, Table, Tag, Space, Button, Modal } from 'antd';
 import {DonationsForm} from './DonationsForm'
 import { DonorsModal } from './DonorsModal';
@@ -70,7 +71,9 @@ function DonorsTable(){
 
   return (
     <Table dataSource={dataSource} rowKey={r => r.donor.donorId}>
-      <Column title='Name' dataIndex={['donor', 'name']} key='name' render={text => <a>{text}</a>}></Column>
+      <Column title='Name' dataIndex={['donor', 'name']} key='name' render={(_, record) =>
+        (<Link to={`profile/${record.donor.donorId}`}>{record.donor.name}</Link>)}>
+      </Column>
       <Column title='Email' dataIndex={['donor', 'email']} ></Column>
       <ColumnGroup title="Address">
         <Column title='Street' dataIndex={['donor', 'address', 'street']} ></Column>
@@ -108,13 +111,13 @@ function DonorsTable(){
           <DonationsForm/>
         </Modal>
       </>
-          <DonorsModal text="Update" initialValues={record}/>
-          <Popconfirm
-            title={`Are you sure delete ${record.name}?`}
-            onConfirm={(e) => deleteRow(record.key, e)}
-            okText="Yes"
-            cancelText="No"
-          >
+        <DonorsModal text="Update" initialValues={record}/>
+        <Popconfirm
+          title={`Are you sure delete ${record.donor.name}?`}
+          onConfirm={(e) => deleteRow(record.donor.donorId, e)}
+          okText="Yes"
+          cancelText="No"
+        >
         <Button danger>
           Delete
         </Button>
@@ -132,7 +135,7 @@ export function DonorsPage() {
         <>
         <div style={{ marginBottom: 16 }}>
         <DonorsModal text="Add Donor"/>
-        <CampaignModal/>
+        <CampaignModal />
         </div>
             <DonorsTable/>
         </>

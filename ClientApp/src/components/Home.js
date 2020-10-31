@@ -61,25 +61,17 @@ const title = {
 }
 
 const campaignSelect = (
-    <>
+
       <Select style={{ width: 120 }}
       defaultValue="Current Year"
       showSearch
       style={{ width: 200 }}
       optionFilterProp="children"
       >
-      <OptGroup label="2020">
         <Option value="jack">5k</Option>
         <Option value="lucy">Women's Build</Option>
-        <Option value="Yiminghe">Current Year</Option>
-      </OptGroup>
-      <OptGroup label="2019">
-        <Option value="jack">5k</Option>
-        <Option value="lucy">Women's Build</Option>
-        <Option value="Yiminghe">2019 Year</Option>
-      </OptGroup>
       </Select>
-    </>
+
 )
 
 export function Home (){
