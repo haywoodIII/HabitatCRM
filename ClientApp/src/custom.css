@@ -1,5 +1,6 @@
 :root {
   --white: #fff;
+  --money-green: #3f8600
 }
 
 body {
@@ -18,7 +19,14 @@ a {
   justify-content: center;
 }
 
+
 .background-white {
   background: var(white)
 }
+
+.stack-card {
+  margin-top: 50px;
+}
+
+
 
