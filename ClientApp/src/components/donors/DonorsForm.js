@@ -7,6 +7,7 @@ import { Form,
   message } from 'antd';
 import './Donors.css';
 import {states} from '../data/geo'
+import * as donorsService from './services/DonorsService'
 
 
 const { Option } = Select;
@@ -135,10 +136,13 @@ export function DonorsForm(props) {
   
   const [form] = Form.useForm();
 
-  const onFinish = values => {
-    message.success(`Successfully Added ${values.donor.name }!`);
-    form.resetFields();
-    console.log('Success:', values);
+  const onFinish = donor => {
+    donorsService.postDonor(donor)
+    .then((donor) => message.success(`Successfully Added ${donor.name}!`))
+    .then(() => form.resetFields())
+    .catch(() => {
+      message.error('Sorry, something went wrong... contact system administrator')
+    });
   };
 
   const onReset = () => {
@@ -172,8 +176,8 @@ export function DonorsForm(props) {
           placeholder="Select..."
           allowClear
         >
-          <Option value={0}>Individual</Option>
-          <Option value={1}>Business</Option>
+          <Option value="Individual">Individual</Option>
+          <Option value="Business">Business</Option>
         </Select>
       </Form.Item>
 

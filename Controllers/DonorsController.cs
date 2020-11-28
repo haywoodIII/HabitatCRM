@@ -25,7 +25,7 @@ namespace HabitatCRM.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Donor>>> GetDonor()
         {
-            return await _context.Donor.ToListAsync();
+            return await _context.Donor.Include(donor => donor.Address).ToListAsync();
         }
 
         // GET: api/Donors/5
