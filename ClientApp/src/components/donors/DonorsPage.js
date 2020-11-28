@@ -10,20 +10,19 @@ const { Column, ColumnGroup} = Table;
 
 function DonorsTable() {
 
-    let [donationsVisible, setDonationsVisible] = useState(false);
-    let [loading, setLoading] = useState(false);
-    let [dataSource, setDataSource] = useState(null);
+  let [donationsVisible, setDonationsVisible] = useState(false);
+  let [loading, setLoading] = useState(false);
+  let [dataSource, setDataSource] = useState(null);
 
-    useEffect(() => {
-        async function getDonors() {
-            setLoading(true);
-            let response = await donorsService.getDonors();
-            setDataSource(response);
-            setLoading(false);
-        }
-        getDonors();
-    }, []);
-
+  useEffect(() => {
+      async function getDonors() {
+          setLoading(true);
+          let response = await donorsService.getDonors();
+          setDataSource(response);
+          setLoading(false);
+      }
+      getDonors();
+  }, []);
 
   const updateRow = (key, e) => {
     e.preventDefault();

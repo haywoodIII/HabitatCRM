@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HabitatCRM.Migrations
 {
-    public partial class InitMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,6 +24,25 @@ namespace HabitatCRM.Migrations
                     table.PrimaryKey("PK_Campaign", x => x.CampaignId);
                 });
 
+                migrationBuilder.Sql(
+                @"CREATE TRIGGER [dbo].[Campaign_UPDATE] ON [dbo].[Campaign]
+                    AFTER UPDATE
+                AS
+                BEGIN
+                    SET NOCOUNT ON;
+
+                    IF ((SELECT TRIGGER_NESTLEVEL()) > 1) RETURN;
+
+                    DECLARE @CampaignId uniqueidentifier 
+
+                    SELECT @CampaignId = INSERTED.CampaignId
+                    FROM INSERTED
+
+                    UPDATE dbo.Campaign
+                    SET ModifiedDate = GETDATE()
+                    WHERE CampaignId = @CampaignId
+                END");
+
             migrationBuilder.CreateTable(
                 name: "Donor",
                 columns: table => new
@@ -43,6 +62,25 @@ namespace HabitatCRM.Migrations
                 {
                     table.PrimaryKey("PK_Donor", x => x.DonorId);
                 });
+
+                migrationBuilder.Sql(
+                @"CREATE TRIGGER [dbo].[Donor_UPDATE] ON [dbo].[Donor]
+                        AFTER UPDATE
+                    AS
+                    BEGIN
+                        SET NOCOUNT ON;
+
+                        IF ((SELECT TRIGGER_NESTLEVEL()) > 1) RETURN;
+
+                        DECLARE @DonorId uniqueidentifier 
+
+                        SELECT @DonorId = INSERTED.DonorId
+                        FROM INSERTED
+
+                        UPDATE dbo.Donor
+                        SET ModifiedDate = GETDATE()
+                        WHERE DonorId = @DonorId
+                    END");
 
             migrationBuilder.CreateTable(
                 name: "Address",
@@ -67,6 +105,25 @@ namespace HabitatCRM.Migrations
                         principalColumn: "DonorId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+                migrationBuilder.Sql(
+                @"CREATE TRIGGER [dbo].[Address_UPDATE] ON [dbo].[Address]
+                        AFTER UPDATE
+                    AS
+                    BEGIN
+                        SET NOCOUNT ON;
+
+                        IF ((SELECT TRIGGER_NESTLEVEL()) > 1) RETURN;
+
+                        DECLARE @AddressId uniqueidentifier 
+
+                        SELECT @AddressId = INSERTED.AddressId
+                        FROM INSERTED
+
+                        UPDATE dbo.Address
+                        SET ModifiedDate = GETDATE()
+                        WHERE AddressId = @AddressId
+                    END");
 
             migrationBuilder.CreateTable(
                 name: "Donation",
@@ -95,6 +152,25 @@ namespace HabitatCRM.Migrations
                         principalColumn: "DonorId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.Sql(
+            @"CREATE TRIGGER [dbo].[Donation_UPDATE] ON [dbo].[Donation]
+                    AFTER UPDATE
+                AS
+                BEGIN
+                    SET NOCOUNT ON;
+
+                    IF ((SELECT TRIGGER_NESTLEVEL()) > 1) RETURN;
+
+                    DECLARE @DonationId uniqueidentifier 
+
+                    SELECT @DonationId = INSERTED.DonationId
+                    FROM INSERTED
+
+                    UPDATE dbo.Donation
+                    SET ModifiedDate = GETDATE()
+                    WHERE DonationId = @DonationId
+                END");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Address_DonorId",
