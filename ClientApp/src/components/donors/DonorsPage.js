@@ -1,57 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useParams, Link} from "react-router-dom";
 import { Popconfirm, Table, Tag, Space, Button, Modal } from 'antd';
 import {DonationsForm} from './DonationsForm'
 import { DonorsModal } from './DonorsModal';
 import { CampaignModal } from './Campaign';
+import * as donorsService from './services/DonorsService'
 
 const { Column, ColumnGroup} = Table;
 
-const dataSource = [
-    {
-      "donor": {
-        donorId: '1',
-        name: 'Pioneer Library',
-        age: 32,
-        "address": {
-          street: '10 Downing Street',
-          city: 'Canandaigua',
-          state: 'NY', 
-          zip: '14424',
-        },
-        phone: '585-396-3584',
-        email: 'pioneer@test.com',
-        type: 'Business',
-        gender: 'Other',
-        genderOther: 'Non-Binary',
-        donationTotal: 5
-      }
-    },
-    {
-      "donor": {
-        donorId: '2',
-        name: 'John',
-        age: 42,
-        "address": {
-          street: '101 Main Street',
-          city: 'Canandaigua',
-          state: 'NY', 
-          zip: '14424',
-        },
-        phone: '585-396-3584',
-        email: 'john@test.com',
-        type: 'Individual',
-        gender: 'Male',
-        donationTotal: 4
-      }
-    },
-  ];
+function DonorsTable() {
 
+    let [donationsVisible, setDonationsVisible] = useState(false);
+    let [loading, setLoading] = useState(false);
+    let [dataSource, setDataSource] = useState(null);
 
+    useEffect(() => {
+        async function getDonors() {
+            setLoading(true);
+            let response = await donorsService.getDonors();
+            setDataSource(response);
+            setLoading(false);
+        }
+        getDonors();
+    }, []);
 
-function DonorsTable(){
-
-  let [donationsVisible, setDonationsVisible] = useState(false);
 
   const updateRow = (key, e) => {
     e.preventDefault();
@@ -69,26 +41,26 @@ function DonorsTable(){
       setDonationsVisible(false);
   };
 
-  return (
-    <Table dataSource={dataSource} rowKey={r => r.donor.donorId}>
-      <Column title='Name' dataIndex={['donor', 'name']} key='name' render={(_, record) =>
-        (<Link to={`profile/${record.donor.donorId}`}>{record.donor.name}</Link>)}>
+    return (
+        <Table dataSource={dataSource} rowKey={r => r.donorId} loading={loading}>
+      <Column title='Name' dataIndex='name' key='name' render={(_, record) =>
+        (<Link to={`profile/${record.donorId}`}>{record.name}</Link>)}>
       </Column>
-      <Column title='Email' dataIndex={['donor', 'email']} ></Column>
+      <Column title='Email' dataIndex="email" ></Column>
       <ColumnGroup title="Address">
-        <Column title='Street' dataIndex={['donor', 'address', 'street']} ></Column>
-        <Column title='City' dataIndex={['donor', 'address', 'city']} ></Column>
-        <Column title='State' dataIndex={['donor', 'address', 'state']} ></Column>
-        <Column title='Zip' dataIndex={['donor', 'address', 'zip']} ></Column>
+        <Column title='Street' dataIndex={['address', 'street']} ></Column>
+        <Column title='City' dataIndex={['address', 'city']} ></Column>
+        <Column title='State' dataIndex={['address', 'state']} ></Column>
+        <Column title='Zip' dataIndex={['address', 'zip']} ></Column>
       </ColumnGroup>
       <Column 
       title='Donor Type' 
-      dataIndex={['donor', 'type']} 
+      dataIndex='type'
       key='type' 
       render = {(type, color) => <Tag color={color = type === "Business" ? "blue": "green"} key={type}>{type.toUpperCase()}</Tag>}
       >
       </Column>
-      <Column title='Total Donations' dataIndex={['donor', 'donationTotal']} key='donationTotal'></Column>
+      {/* <Column title='Total Donations' dataIndex='donationTotal' key='donationTotal'></Column> */}
       <Column 
       title='Action' 
       key='action'
@@ -113,8 +85,8 @@ function DonorsTable(){
       </>
         <DonorsModal text="Update" initialValues={record}/>
         <Popconfirm
-          title={`Are you sure delete ${record.donor.name}?`}
-          onConfirm={(e) => deleteRow(record.donor.donorId, e)}
+          title={`Are you sure delete ${record.name}?`}
+          onConfirm={(e) => deleteRow(record.donorId, e)}
           okText="Yes"
           cancelText="No"
         >

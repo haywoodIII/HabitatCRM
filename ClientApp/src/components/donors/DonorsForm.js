@@ -31,7 +31,7 @@ function GenderSelect() {
   return (
     <div >           
       <Form.Item
-      name={['donor', 'gender']}
+      name='gender'
       label="Gender"
   
       rules={[
@@ -54,9 +54,9 @@ function GenderSelect() {
       shouldUpdate={(prevValues, currentValues) => prevValues !== currentValues}
     >
       {({ getFieldValue }) => {
-        return getFieldValue(['donor', 'gender']) === 'Other' ? (
+        return getFieldValue('gender') === 'Other' ? (
           <Form.Item
-            name={['donor', 'genderOther']}
+            name='genderOther'
             label="Enter Gender: "
             rules ={[
               {
@@ -84,7 +84,7 @@ function AddressSelect() {
       <Form.Item label="Address" >
       <Input.Group>
         <Form.Item
-          name={['donor', 'address', 'street']}
+          name={['address', 'street']}
           noStyle
           rules={[{ required: true, message: 'Street is required' }]}
         >
@@ -92,7 +92,7 @@ function AddressSelect() {
         </Form.Item>
 
         <Form.Item
-          name={['donor', 'address', 'city']}
+          name={['address', 'city']}
           noStyle
           rules={[{ required: true, message: 'City is required' }]}
         >
@@ -100,7 +100,7 @@ function AddressSelect() {
         </Form.Item>
 
         <Form.Item
-          name={['donor', 'address', 'state']}
+          name={['address', 'state']}
           noStyle
           rules={[{ required: true, message: 'State is required' }]}
         >
@@ -118,7 +118,7 @@ function AddressSelect() {
         </Form.Item>
 
         <Form.Item
-          name={['donor', 'address', 'zip']}
+          name={['address', 'zip']}
           noStyle
           rules={[{ required: true, message: 'Zip is required' }]}
         >
@@ -148,19 +148,19 @@ export function DonorsForm(props) {
 
   return (
     <Form {...layout} form={form} onFinish={onFinish} validateMessages={validateMessages} initialValues={props.initialValues}>
-      <Form.Item name={['donor', 'name']} label="Name" rules={[{ required: true }]}>
+      <Form.Item name='name' label="Name" rules={[{ required: true }]}>
           <Input />
       </Form.Item>
-      <Form.Item name={['donor', 'email']} label="Email" rules={[{ type: 'email', required: true }]}>
+      <Form.Item name='email' label="Email" rules={[{ type: 'email', required: true }]}>
           <Input />
       </Form.Item>
-      <Form.Item name={['donor', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
+      <Form.Item name='age' label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
           <InputNumber />
       </Form.Item>
       <AddressSelect/>
       <GenderSelect/>
       <Form.Item
-        name={['donor', 'type']} 
+        name='type'
         label="Donor Type:"
         rules={[
           {
@@ -178,7 +178,7 @@ export function DonorsForm(props) {
       </Form.Item>
 
       <Form.Item
-      name={['donor', 'phone']} 
+      name='phone'
       label="Phone Number"
       rules={[{ required: true, message: 'Please input your phone number!'}]}
       >
