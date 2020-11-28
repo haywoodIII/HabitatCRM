@@ -28,7 +28,7 @@ namespace HabitatCRM.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -36,7 +36,7 @@ namespace HabitatCRM.Migrations
                     b.Property<Guid>("DonorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -64,7 +64,7 @@ namespace HabitatCRM.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -75,7 +75,7 @@ namespace HabitatCRM.Migrations
                     b.Property<decimal>("Goal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -103,7 +103,7 @@ namespace HabitatCRM.Migrations
                     b.Property<Guid?>("CampaignId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -111,7 +111,7 @@ namespace HabitatCRM.Migrations
                     b.Property<Guid>("DonorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -134,7 +134,7 @@ namespace HabitatCRM.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -148,7 +148,7 @@ namespace HabitatCRM.Migrations
                     b.Property<string>("GenderOther")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -180,7 +180,7 @@ namespace HabitatCRM.Migrations
 
             modelBuilder.Entity("HabitatCRM.Entities.Donation", b =>
                 {
-                    b.HasOne("HabitatCRM.Entities.Campaign", null)
+                    b.HasOne("HabitatCRM.Entities.Campaign", "Campaign")
                         .WithMany("Donations")
                         .HasForeignKey("CampaignId");
 
@@ -189,6 +189,8 @@ namespace HabitatCRM.Migrations
                         .HasForeignKey("DonorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Campaign");
 
                     b.Navigation("Donor");
                 });

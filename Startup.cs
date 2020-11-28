@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using HabitatCRM.Data;
+using System.Text.Json.Serialization;
 
 namespace HabitatCRM
 {
@@ -25,8 +26,8 @@ namespace HabitatCRM
 
             services.AddControllersWithViews()
                  .AddNewtonsoftJson(options =>
-                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                 );
+                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+                 .AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault);
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

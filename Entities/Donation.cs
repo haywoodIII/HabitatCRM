@@ -20,12 +20,16 @@ namespace HabitatCRM.Entities
 
         public Donor Donor { get; set; }
 
+        public Campaign Campaign { get; set; }
+
+        public Guid? CampaignId { get; set; }
+
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime ModifiedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
     }
 }

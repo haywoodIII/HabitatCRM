@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HabitatCRM.Migrations
 {
     [DbContext(typeof(HabitatCRMContext))]
-    [Migration("20201127221625_AddDefaultDateValues")]
-    partial class AddDefaultDateValues
+    [Migration("20201128140057_InitMigration")]
+    partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,7 +30,7 @@ namespace HabitatCRM.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -38,7 +38,7 @@ namespace HabitatCRM.Migrations
                     b.Property<Guid>("DonorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -66,7 +66,7 @@ namespace HabitatCRM.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -77,7 +77,7 @@ namespace HabitatCRM.Migrations
                     b.Property<decimal>("Goal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -102,10 +102,10 @@ namespace HabitatCRM.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("CampaignId")
+                    b.Property<Guid?>("CampaignId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -113,7 +113,7 @@ namespace HabitatCRM.Migrations
                     b.Property<Guid>("DonorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -136,7 +136,7 @@ namespace HabitatCRM.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -150,7 +150,7 @@ namespace HabitatCRM.Migrations
                     b.Property<string>("GenderOther")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
@@ -184,9 +184,7 @@ namespace HabitatCRM.Migrations
                 {
                     b.HasOne("HabitatCRM.Entities.Campaign", "Campaign")
                         .WithMany("Donations")
-                        .HasForeignKey("CampaignId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CampaignId");
 
                     b.HasOne("HabitatCRM.Entities.Donor", "Donor")
                         .WithMany("Donations")
