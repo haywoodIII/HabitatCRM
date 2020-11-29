@@ -106,7 +106,7 @@ export function DonorsPage() {
 
   const addDonor = (donor) => {
     setLoading(true);
-    setDataSource(dataSource.concat(donor));
+    setDataSource([...dataSource, donor]);
     setLoading(false);
     }
 
