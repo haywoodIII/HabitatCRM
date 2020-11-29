@@ -146,9 +146,7 @@ export function DonorsForm(props) {
     .then(() => form.resetFields())
     .catch((error) => {
       message.error('Sorry, something went wrong... contact system administrator')
-      console.log(error)
     });
-    //  const _ = () => props.addDonor(donor);
   };
 
   const onReset = () => {

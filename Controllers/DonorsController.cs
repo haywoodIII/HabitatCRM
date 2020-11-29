@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HabitatCRM.Data;
 using HabitatCRM.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HabitatCRM.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class DonorsController : ControllerBase
     {
