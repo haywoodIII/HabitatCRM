@@ -8,21 +8,9 @@ import * as donorsService from './services/DonorsService'
 
 const { Column, ColumnGroup} = Table;
 
-function DonorsTable() {
+function DonorsTable(props) {
 
   let [donationsVisible, setDonationsVisible] = useState(false);
-  let [loading, setLoading] = useState(false);
-  let [dataSource, setDataSource] = useState(null);
-
-  useEffect(() => {
-      async function getDonors() {
-          setLoading(true);
-          let response = await donorsService.getDonors();
-          setDataSource(response);
-          setLoading(false);
-      }
-      getDonors();
-  }, []);
 
   const updateRow = (key, e) => {
     e.preventDefault();
@@ -41,7 +29,7 @@ function DonorsTable() {
   };
 
     return (
-        <Table dataSource={dataSource} rowKey={r => r.donorId} loading={loading}>
+        <Table dataSource={props.dataSource} rowKey={r => r.donorId} loading={props.loading}>
       <Column title='Name' dataIndex='name' key='name' render={(_, record) =>
         (<Link to={`profile/${record.donorId}`}>{record.name}</Link>)}>
       </Column>
@@ -102,13 +90,33 @@ function DonorsTable() {
 }
 
 export function DonorsPage() {
+
+  let [loading, setLoading] = useState(false);
+  let [dataSource, setDataSource] = useState(null);
+
+  useEffect(() => {
+      async function getDonors() {
+          setLoading(true);
+          let response = await donorsService.getDonors();
+          setDataSource(response);
+          setLoading(false);
+      }
+      getDonors();
+  }, []);
+
+  const addDonor = (donor) => {
+    setLoading(true);
+    setDataSource(dataSource.concat(donor));
+    setLoading(false);
+    }
+
     return (
         <>
         <div style={{ marginBottom: 16 }}>
-        <DonorsModal text="Add Donor"/>
+        <DonorsModal text="Add Donor" addDonor={addDonor} />
         <CampaignModal />
         </div>
-            <DonorsTable/>
+            <DonorsTable dataSource={dataSource} loading={loading}/>
         </>
     );
 }

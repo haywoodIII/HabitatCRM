@@ -8,6 +8,7 @@ import { Form,
 import './Donors.css';
 import {states} from '../data/geo'
 import * as donorsService from './services/DonorsService'
+import * as helpers from './services/HelpersService'
 
 
 const { Option } = Select;
@@ -137,16 +138,20 @@ export function DonorsForm(props) {
   const [form] = Form.useForm();
 
   const onFinish = donor => {
+
     donorsService.postDonor(donor)
-    .then((donor) => message.success(`Successfully Added ${donor.name}!`))
+    .then(() => message.success(`Adding ${donor.name}!`))
+    .then(() => donor.donorId = helpers.uuidv4())
+    .then(() => props.addDonor(donor))
     .then(() => form.resetFields())
-    .catch(() => {
+    .catch((error) => {
       message.error('Sorry, something went wrong... contact system administrator')
+      console.log(error)
     });
+    //  const _ = () => props.addDonor(donor);
   };
 
   const onReset = () => {
-    console.log(props.initialValues);
     form.resetFields();
   };
 

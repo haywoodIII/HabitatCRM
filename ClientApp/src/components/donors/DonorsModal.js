@@ -25,7 +25,7 @@ export function DonorsModal(props) {
             </Button>,
             ]}
         >
-            <DonorsForm initialValues={props.initialValues}/>
+            <DonorsForm initialValues={props.initialValues} addDonor={props.addDonor} text={props.text}/>
         </Modal>
       </>
     );
