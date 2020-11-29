@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {useParams, Link} from "react-router-dom";
 import { Popconfirm, Table, Tag, Space, Button, Modal } from 'antd';
+import { useMsal } from "@azure/msal-react";
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
 import {DonationsForm} from './DonationsForm'
 import { DonorsModal } from './DonorsModal';
 import { CampaignModal } from './Campaign';
@@ -93,11 +95,12 @@ export function DonorsPage() {
 
   let [loading, setLoading] = useState(false);
   let [dataSource, setDataSource] = useState(null);
+  const { instance, accounts, inProgress } = useMsal();
 
   useEffect(() => {
       async function getDonors() {
           setLoading(true);
-          let response = await donorsService.getDonors();
+          let response = await donorsService.getDonors(instance, accounts);
           setDataSource(response);
           setLoading(false);
       }

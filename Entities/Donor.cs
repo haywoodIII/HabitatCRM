@@ -12,6 +12,8 @@ namespace HabitatCRM.Entities
         [Key]
         public Guid DonorId { get; set; }
 
+        public Guid UserId { get; set; }
+
         public string Name { get; set; }
 
         public int Age { get; set; }

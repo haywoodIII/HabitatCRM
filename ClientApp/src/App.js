@@ -6,13 +6,12 @@ import { FetchData } from './components/FetchData';
 import { DonorsPage } from './components/donors/DonorsPage';
 import { Profile } from './components/donors/Profile';
 
+import { useMsalAuthentication } from "@azure/msal-react";
 import './custom.css'
 
+export default function App() {
 
-export default class App extends Component {
-  static displayName = App.name;
-
-  render () {
+    const {login, result, error} = useMsalAuthentication("popup");
     return (
       <Layout>
         <Route exact path='/' component={Home} />
@@ -21,5 +20,4 @@ export default class App extends Component {
         <Route path='/profile/:id' component={Profile} />
       </Layout>
     );
-  }
 }

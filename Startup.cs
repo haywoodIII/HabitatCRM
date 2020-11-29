@@ -8,9 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using HabitatCRM.Data;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 
 namespace HabitatCRM
 {
@@ -26,13 +25,8 @@ namespace HabitatCRM
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(AzureADB2CDefaults.BearerAuthenticationScheme)
-            .AddAzureADB2CBearer(options => Configuration.Bind("AzureAdB2C", options));
-            services.Configure<JwtBearerOptions>(
-                AzureADB2CDefaults.JwtBearerAuthenticationScheme, options =>
-                {
-                    options.TokenValidationParameters.NameClaimType = "name";
-                });
+            services.AddAuthentication(AzureADDefaults.JwtBearerAuthenticationScheme)
+                .AddAzureADBearer(options => Configuration.Bind("AzureAd", options));
 
             services.AddControllersWithViews()
                  .AddNewtonsoftJson(options =>
