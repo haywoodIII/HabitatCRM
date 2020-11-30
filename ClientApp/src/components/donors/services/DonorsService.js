@@ -11,7 +11,6 @@ export async function getToken() {
        jwt = await msalInstance.acquireTokenSilent({scopes: scopes, account: accounts[0]});
     } catch(err) {
         if(err.name === "ClientAuthError") {
-            const msalInstance = new msal.PublicClientApplication(msalConfiguration);
             jwt = await msalInstance.acquireTokenPopup({scopes: scopes, account: accounts[0]});
         }
     }

@@ -11,7 +11,6 @@ import './custom.css'
 
 export default function App() {
 
-    const {login, result, error} = useMsalAuthentication("popup");
     return (
       <Layout>
         <Route exact path='/' component={Home} />
