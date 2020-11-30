@@ -13,23 +13,25 @@ const { Header, Content, Sider } = Layout;
 
 export function SignIn() {
 
-    const style = {color: "white"}
+    const spanStyle = {color: "white"};
+    const buttonStyle = {marginLeft: 5};
 
     const { instance, accounts, inProgress } = useMsal();
 
     if (accounts.length > 0) {
         return (
         <div>
-            <span style={style}>Welcome {accounts[0].username}</span>
-            <Button type="default" onClick={() => instance.logout()}>Logout</Button>
+            <span style={spanStyle}>{accounts[0].username}</span>
+            <Button type="default" onClick={() => instance.logout()} style={buttonStyle}>Logout</Button>
         </div>
         );
     } else if (inProgress === "login") {
-        return <span style={style}>Login is currently in progress</span>
+        return <span style={spanStyle}>Login is currently in progress</span>
     } else {
         return (
             <div>
-                <Button type="default" onClick={() => instance.loginPopup()}>Login</Button>
+                <span style={spanStyle}>Welcome User!</span>
+                <Button type="default" onClick={() => instance.loginPopup()} style={buttonStyle}>Login</Button>
             </div>
         );
     }
