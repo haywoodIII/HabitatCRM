@@ -1,10 +1,20 @@
+import * as msal from "@azure/msal-browser";
+import {msalConfiguration, scopes} from "../../../AuthConfig";
+
 const baseUrl = "/api/donors"
 
-export async function getToken(msal, accounts) {
-    const jwt = await msal.acquireTokenSilent({
-        scopes: ["https://haywoodco.onmicrosoft.com/20f42935-d191-4b89-88c1-75e43f612db7/ApiAccess"],
-        account: accounts[0]});
-    
+export async function getToken() {
+    const msalInstance = new msal.PublicClientApplication(msalConfiguration);
+    const accounts = msalInstance.getAllAccounts();
+    let jwt = null;
+    try {
+       jwt = await msalInstance.acquireTokenSilent({scopes: scopes, account: accounts[0]});
+    } catch(err) {
+        if(err.name === "ClientAuthError") {
+            const msalInstance = new msal.PublicClientApplication(msalConfiguration);
+            jwt = await msalInstance.acquireTokenPopup({scopes: scopes, account: accounts[0]});
+        }
+    }
     return jwt.accessToken;
 }
 
