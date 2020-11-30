@@ -3,6 +3,7 @@ import {useParams, Link} from "react-router-dom";
 import { Popconfirm, Table, Tag, Space, Button, Modal } from 'antd';
 import { useMsal } from "@azure/msal-react";
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
+import { useMsalAuthentication } from "@azure/msal-react";
 import {DonationsForm} from './DonationsForm'
 import { DonorsModal } from './DonorsModal';
 import { CampaignModal } from './Campaign';
@@ -100,7 +101,7 @@ export function DonorsPage() {
   useEffect(() => {
       async function getDonors() {
           setLoading(true);
-          let response = await donorsService.getDonors(instance, accounts);
+          let response = await donorsService.getDonors(instance);
           setDataSource(response);
           setLoading(false);
       }
@@ -115,12 +116,6 @@ export function DonorsPage() {
 
     return (
         <>
-        <AuthenticatedTemplate>
-        <p>{accounts[0]?.username + ' is signed in!!'}</p>
-        </AuthenticatedTemplate>
-        <UnauthenticatedTemplate>
-            <p>No users are signed in!</p>
-        </UnauthenticatedTemplate>
         <div style={{ marginBottom: 16 }}>
         <DonorsModal text="Add Donor" addDonor={addDonor} />
         <CampaignModal />

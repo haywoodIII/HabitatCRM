@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { SideNav } from './SideNav';
+import { useMsal } from "@azure/msal-react";
 
-export class Layout extends Component {
-  static displayName = Layout.name;
+export function Layout(props) {
+  const { instance, accounts, inProgress } = useMsal();
 
-  render () {
     return (
         <div>
-        <SideNav>
-            {this.props.children}
+        <SideNav accounts={accounts} inProgress={inProgress} instance={instance}>
+            {props.children}
         </SideNav>
       </div>
     );
-  }
 }
