@@ -115,6 +115,12 @@ export function DonorsPage() {
 
     return (
         <>
+        <AuthenticatedTemplate>
+        <p>{accounts[0]?.username + ' is signed in!!'}</p>
+        </AuthenticatedTemplate>
+        <UnauthenticatedTemplate>
+            <p>No users are signed in!</p>
+        </UnauthenticatedTemplate>
         <div style={{ marginBottom: 16 }}>
         <DonorsModal text="Add Donor" addDonor={addDonor} />
         <CampaignModal />

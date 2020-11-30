@@ -3,14 +3,14 @@ import {msalConfiguration, scopes} from "../../../AuthConfig";
 
 const baseUrl = "/api/donors"
 
-export async function getToken() {
+export async function getTokenSilentAndPopupIfAuthError() {
     const msalInstance = new msal.PublicClientApplication(msalConfiguration);
     const accounts = msalInstance.getAllAccounts();
     let jwt = null;
     try {
        jwt = await msalInstance.acquireTokenSilent({scopes: scopes, account: accounts[0]});
     } catch(err) {
-        if(err.name === "ClientAuthError") {
+        if (err.name === "ClientAuthError") {
             jwt = await msalInstance.acquireTokenPopup({scopes: scopes, account: accounts[0]});
         }
     }
@@ -18,7 +18,7 @@ export async function getToken() {
 }
 
 export async function getDonors(msal, accounts) {
-    const token = await getToken(msal, accounts);
+    const token = await getTokenSilentAndPopupIfAuthError(msal, accounts);
     const response = await fetch(baseUrl, {
         method: 'GET',
         headers: {
