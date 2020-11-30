@@ -12,8 +12,6 @@ namespace HabitatCRM.Entities
         [Key]
         public Guid DonationId { get; set; }
 
-        public Guid UserId { get; set; }
-
         [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; }
 

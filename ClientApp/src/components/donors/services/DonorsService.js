@@ -1,41 +1,46 @@
 import * as msal from "@azure/msal-browser";
 import {msalConfiguration, scopes} from "../../../AuthConfig";
+import * as helpers from './HelpersService';
 
 const baseUrl = "/api/donors"
 
-export async function getTokenSilentAndPopupIfAuthError(msal) {
-    const accounts = msal.getAllAccounts();
+export async function getJwtSilentAndPopupIfAuthError(authProvider) {
+    const accounts = authProvider.getAllAccounts();
     let jwt = null;
     try {
-       jwt = await msal.acquireTokenSilent({scopes: scopes, account: accounts[0]});
+       jwt = await authProvider.acquireTokenSilent({scopes: scopes, account: accounts[0]});
     } catch(err) {
         if (err.name === "ClientAuthError") {
-            jwt = await msal.acquireTokenPopup({scopes: scopes, account: accounts[0]});
+            jwt = await authProvider.acquireTokenPopup({scopes: scopes, account: accounts[0]});
         }
     }
-    return jwt.accessToken;
+    return jwt;
 }
 
-export async function getDonors(msal) {
-    const token = await getTokenSilentAndPopupIfAuthError(msal);
+export async function getDonors(authProvider) {
+    const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
     const response = await fetch(baseUrl, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${jwt.accessToken}`,
           }, 
     });
-    const data = await response.json();
-    return data;
+    const donor = await response.json();
+    return donor;
 }
 
-export async function postDonor(data = {}) {
+export async function postDonor(donor = {}, authProvider) {
+    const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
+    donor.userId = jwt.uniqueId; 
+    donor.donorId = helpers.uuidv4()
 
     const response = await fetch(baseUrl, {
         method: 'POST',
         headers: {
+            'Authorization': `Bearer ${jwt.accessToken}`,
             'Content-Type': 'application/json',
           }, 
-        body: JSON.stringify(data) 
+        body: JSON.stringify(donor) 
     });
       return response.json(); 
 }

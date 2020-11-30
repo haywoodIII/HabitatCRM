@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HabitatCRM.Data;
 using HabitatCRM.Entities;
 using Microsoft.AspNetCore.Authorization;
+using HabitatCRM.Controllers.Helpers;
 
 namespace HabitatCRM.Controllers
 {
@@ -27,7 +28,15 @@ namespace HabitatCRM.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Donor>>> GetDonor()
         {
-            return await _context.Donor.Include(donor => donor.Address).ToListAsync();
+            /*return await _context.Donor.Include(donor => donor.Address).ToListAsync();*/
+            var userId = this.GetUserId();
+
+            var donors = await _context.Donor
+                .Where(d => d.UserId == userId)
+                .Include(d => d.Address)
+                .ToListAsync();
+
+            return donors;
         }
 
         // GET: api/Donors/5

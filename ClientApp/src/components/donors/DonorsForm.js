@@ -6,9 +6,11 @@ import { Form,
   Select,
   message } from 'antd';
 import './Donors.css';
-import {states} from '../data/geo'
-import * as donorsService from './services/DonorsService'
-import * as helpers from './services/HelpersService'
+import {states} from '../data/geo';
+import * as donorsService from './services/DonorsService';
+
+import { useMsal } from "@azure/msal-react";
+
 
 
 const { Option } = Select;
@@ -136,15 +138,15 @@ function AddressSelect() {
 export function DonorsForm(props) {
   
   const [form] = Form.useForm();
+  const { instance } = useMsal();
 
   const onFinish = donor => {
 
-    donorsService.postDonor(donor)
+    donorsService.postDonor(donor, instance)
     .then(() => message.success(`Adding ${donor.name}!`))
-    .then(() => donor.donorId = helpers.uuidv4())
     .then(() => props.addDonor(donor))
     .then(() => form.resetFields())
-    .catch((error) => {
+    .catch((_) => {
       message.error('Sorry, something went wrong... contact system administrator')
     });
   };
