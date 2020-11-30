@@ -1,7 +1,9 @@
 ﻿import React from 'react';
 import { Layout, Menu } from 'antd';
 import { DesktopOutlined, PieChartOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { Link } from "react-router-dom"; 
+import { Row, Col } from 'antd';
 import './SideNav.css';
 
 import { useMsal } from "@azure/msal-react";
@@ -16,15 +18,19 @@ export function SignIn() {
     const { instance, accounts, inProgress } = useMsal();
 
     if (accounts.length > 0) {
-        return <span style={style}>Welcome {accounts[0].username}</span>
+        return (
+        <div>
+            <span style={style}>Welcome {accounts[0].username}</span>
+            <Button type="default" onClick={() => instance.logout()}>Logout</Button>
+        </div>
+        );
     } else if (inProgress === "login") {
-        return <span style={style}>Login is currently in progress!</span>
+        return <span style={style}>Login is currently in progress</span>
     } else {
         return (
-            <>
-                <span style={style}>There are currently no users signed in!</span>
-                <button onClick={() => instance.loginPopup()}>Login</button>
-            </>
+            <div>
+                <Button type="default" onClick={() => instance.loginPopup()}>Login</Button>
+            </div>
         );
     }
 }
@@ -45,8 +51,12 @@ export class SideNav extends React.Component {
         return (
             <Layout className="site-layout-background" style={{ minHeight: '100vh', margin: "none" }}>
                 <Header className="header">
-                    {/* <div className="logo" /> */}
-                <SignIn/>
+                <div className="logo" />
+                    <Row>
+                        <Col span={8} offset={20}>
+                            <SignIn />
+                        </Col>
+                    </Row>
                 </Header>
                 <Layout>
                     <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
