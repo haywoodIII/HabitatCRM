@@ -140,13 +140,13 @@ export function DonorsForm(props) {
   const [form] = Form.useForm();
   const { instance } = useMsal();
 
-  const onFinish = donor => {
+  const onFinish = async donor => {
 
-    donorsService.postDonor(donor, instance)
+    await donorsService.postDonor(donor, instance)
     .then(() => message.success(`Adding ${donor.name}!`))
     .then(() => props.addDonor(donor))
     .then(() => form.resetFields())
-    .catch((_) => {
+    .catch((_ ) => {
       message.error('Sorry, something went wrong... contact system administrator')
     });
   };

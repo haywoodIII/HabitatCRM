@@ -1,5 +1,5 @@
-import * as msal from "@azure/msal-browser";
-import {msalConfiguration, scopes} from "../../../AuthConfig";
+
+import {scopes} from "../../../AuthConfig";
 import * as helpers from './HelpersService';
 
 const baseUrl = "/api/donors"
@@ -7,6 +7,7 @@ const baseUrl = "/api/donors"
 export async function getJwtSilentAndPopupIfAuthError(authProvider) {
     const accounts = authProvider.getAllAccounts();
     let jwt = null;
+
     try {
        jwt = await authProvider.acquireTokenSilent({scopes: scopes, account: accounts[0]});
     } catch(err) {
@@ -19,6 +20,7 @@ export async function getJwtSilentAndPopupIfAuthError(authProvider) {
 
 export async function getDonors(authProvider) {
     const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
+    console.log(jwt);
     const response = await fetch(baseUrl, {
         method: 'GET',
         headers: {

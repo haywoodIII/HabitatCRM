@@ -30,8 +30,9 @@ namespace HabitatCRM.Entities
 
 
         public List<Donation> Donations { get; set; }
-
         public Address Address { get; set; }
+        public Organization Organization { get; set; }
+        public Guid OrganizationId { get; set; }
 
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
