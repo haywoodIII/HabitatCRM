@@ -1,10 +1,10 @@
 // MSAL configuration
 export const msalConfiguration = {
     auth: {
-        clientId: "3626b35e-0129-407a-ade4-5e8c2d1287a8",
-        authority: "https://login.microsoftonline.com/206923d2-477a-413e-b4e9-5fcdca2271ba/", 
+        clientId: "7385e621-98a1-41b4-b9e9-2403d668c173",
+        authority: "https://login.microsoftonline.com/8f51ea41-de84-4476-b7db-a7c3025d3002/",
         redirectUri: 'https://localhost:5001/authentication/login-callback'
     }
   };
 
-  export const scopes = ["https://haywoodco.onmicrosoft.com/20f42935-d191-4b89-88c1-75e43f612db7/ApiAccess"]
+  export const scopes = ["api://ec559591-a3db-4011-8f2d-24dcbfb205e7/API"]

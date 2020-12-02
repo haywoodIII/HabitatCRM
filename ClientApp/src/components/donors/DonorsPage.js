@@ -45,7 +45,7 @@ function DonorsTable(props) {
       title='Donor Type' 
       dataIndex='type'
       key='type' 
-      render = {(type, color) => <Tag color={color = type === "Business" ? "blue": "green"} key={type}>{type.toUpperCase()}</Tag>}
+      render = {(type, color) => <Tag color={color = type === "Business" ? "blue": "green"} key={type}>{type?.toUpperCase()}</Tag>}
       >
       </Column>
       {/* <Column title='Total Donations' dataIndex='donationTotal' key='donationTotal'></Column> */}
