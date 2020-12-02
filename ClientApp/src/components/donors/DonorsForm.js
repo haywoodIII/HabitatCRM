@@ -40,7 +40,7 @@ function GenderSelect() {
   
       rules={[
         {
-          required: true,
+          required: false,
         },
       ]}
     >

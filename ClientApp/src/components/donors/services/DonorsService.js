@@ -21,7 +21,8 @@ export async function getJwtSilentAndPopupIfAuthError(authProvider) {
 export async function getDonors(authProvider) {
     const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
     console.log(jwt);
-    const response = await fetch(baseUrl, {
+    const organizationId = jwt.idTokenClaims["extn.Organization"][0];
+    const response = await fetch(`${baseUrl}?Organization=${organizationId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
@@ -33,9 +34,11 @@ export async function getDonors(authProvider) {
 
 export async function postDonor(donor = {}, authProvider) {
     const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
+    
     donor.userId = jwt.uniqueId; 
-    donor.donorId = helpers.uuidv4()
-
+    donor.organizationId = jwt.idTokenClaims["extn.Organization"][0];
+    donor.donorId = helpers.uuidv4();
+    
     const response = await fetch(baseUrl, {
         method: 'POST',
         headers: {
