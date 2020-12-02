@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using HabitatCRM.Data;
 using HabitatCRM.Entities;
 using Microsoft.AspNetCore.Authorization;
-using HabitatCRM.Controllers.Helpers;
 using Microsoft.AspNetCore.Authentication;
 
 namespace HabitatCRM.Controllers
@@ -26,14 +25,12 @@ namespace HabitatCRM.Controllers
         }
 
         // GET: api/Donors
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Donor>>> GetDonor()
-        {
-            /*return await _context.Donor.Include(donor => donor.Address).ToListAsync();*/
-            var accessToken = HttpContext.User.Claims.First(c => c.Type is "extn.Organization").Value;
 
-            var donors = await _context.Donor
-                .Where(d => d.OrganizationId == Guid.Parse(accessToken))
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Donor>>> GetDonors([FromQuery(Name = "organization")] Guid id)
+        {
+            List<Donor> donors = await _context.Donor
+                .Where(d => d.OrganizationId == id)
                 .Include(d => d.Address)
                 .ToListAsync();
 
@@ -44,7 +41,7 @@ namespace HabitatCRM.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Donor>> GetDonor(Guid id)
         {
-            var donor = await _context.Donor.FindAsync(id);
+            Donor donor = await _context.Donor.FindAsync(id);
 
             if (donor == null)
             {
