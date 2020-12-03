@@ -85,7 +85,7 @@ function AddressSelect() {
   
   return(
     <div>
-      <Form.Item label="Address" >
+      <Form.Item label="Address" required={true}>
       <Input.Group>
         <Form.Item
           name={['address', 'street']}
