@@ -137,7 +137,7 @@ export function DonorsPage() {
     return (
         <>
         <div style={{ marginBottom: 16 }}>
-        <DonorsModal addOrUpdate="Add Donor" addDonor={addDonor} />
+        <DonorsModal addOrUpdate="Add" addDonor={addDonor} />
         <CampaignModal />
         </div>
             <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor} updateDonor={updateDonor}/>
