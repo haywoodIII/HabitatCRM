@@ -142,14 +142,26 @@ export function DonorsForm(props) {
 
   const onFinish = async donor => {
 
-    await donorsService.postDonor(donor, instance)
-    .then(() => message.success(`Adding ${donor.name}!`))
-    .then(() => props.addDonor(donor))
-    .then(() => form.resetFields())
-    .catch((_ ) => {
-      message.error('Sorry, something went wrong... contact system administrator')
-    });
-  };
+    if (props.addOrUpdate == "Add") {
+      await donorsService.postDonor(donor, instance)
+      .then(() => message.success(`Adding ${donor.name}`))
+      .then(() => props.addDonor(donor))
+      .then(() => form.resetFields())
+      .catch((_ ) => {
+        message.error('Sorry, something went wrong... contact system administrator')
+      });
+    } else if (props.addOrUpdate == "Update") {
+        await donorsService.updateDonor(donor, instance)
+        .then(() => message.success(`Updating ${donor.name}`))
+        .then(() => props.updateDonor(donor))
+        .then(() => form.resetFields())
+        .catch((_ ) => {
+          message.error('Sorry, something went wrong... contact system administrator')
+        });
+    };
+
+  }
+
 
   const onReset = () => {
     form.resetFields();
@@ -157,6 +169,8 @@ export function DonorsForm(props) {
 
   return (
     <Form {...layout} form={form} onFinish={onFinish} validateMessages={validateMessages} initialValues={props.initialValues}>
+      <Form.Item name='donorId' hidden={true}/>
+      <Form.Item name='organizationId' hidden={true}/> 
       <Form.Item name='name' label="Name" rules={[{ required: true }]}>
           <Input />
       </Form.Item>

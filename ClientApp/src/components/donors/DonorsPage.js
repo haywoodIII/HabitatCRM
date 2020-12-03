@@ -71,7 +71,7 @@ function DonorsTable(props) {
           <DonationsForm/>
         </Modal>
       </>
-        <DonorsModal text="Update" initialValues={record}/>
+        <DonorsModal addOrUpdate="Update" initialValues={record} updateDonor={props.updateDonor}/>
         <Popconfirm
           title={`Are you sure delete ${record.name}?`}
           onConfirm={(e) => deleteDonor(record.donorId, e)}
@@ -106,12 +106,26 @@ export function DonorsPage() {
       getDonors();
   }, []);
 
+  //TODO move from form to here!
   const addDonor = (donor) => {
     setLoading(true);
     setDataSource([...dataSource, donor]);
     setLoading(false);
-    }
+  }
 
+  const updateDonor = (donor) => {
+    setLoading(true);
+
+    var newData = dataSource.map(el => {
+      if(el.donorId == donor.donorId)
+         return Object.assign({}, donor, {valid:true})
+      return el
+  });
+
+    setDataSource(newData);
+    setLoading(false);
+  }
+  
   const deleteDonor = async (donorId) => {
     await donorsService.deleteDonor(donorId, instance)
     .then(setLoading(true))
@@ -123,10 +137,10 @@ export function DonorsPage() {
     return (
         <>
         <div style={{ marginBottom: 16 }}>
-        <DonorsModal text="Add Donor" addDonor={addDonor} />
+        <DonorsModal addOrUpdate="Add Donor" addDonor={addDonor} />
         <CampaignModal />
         </div>
-            <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor}/>
+            <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor} updateDonor={updateDonor}/>
         </>
     );
 }

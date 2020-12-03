@@ -13,10 +13,10 @@ export function DonorsModal(props) {
     return (
         <>
         <Button onClick={() => setDonorsModalVisible(true)}>
-            {props.text}
+            {props.addOrUpdate}
         </Button>
         <Modal
-            title={props.text}
+            title={props.addOrUpdate}
             visible={donorsModalVisible}
             onCancel={handleDonorsModalCancel}
             footer={[
@@ -25,7 +25,7 @@ export function DonorsModal(props) {
             </Button>,
             ]}
         >
-            <DonorsForm initialValues={props.initialValues} addDonor={props.addDonor} text={props.text}/>
+            <DonorsForm initialValues={props.initialValues} addDonor={props.addDonor} updateDonor={props.updateDonor} addOrUpdate={props.addOrUpdate}/>
         </Modal>
       </>
     );

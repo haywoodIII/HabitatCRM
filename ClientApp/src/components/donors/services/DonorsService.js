@@ -39,8 +39,21 @@ export async function postDonor(donor = {}, authProvider) {
     donor.organizationId = jwt.idTokenClaims["extn.Organization"][0];
     donor.donorId = helpers.uuidv4();
     
-    const response = await fetch(baseUrl, {
+    await fetch(baseUrl, {
         method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${jwt.accessToken}`,
+            'Content-Type': 'application/json',
+          }, 
+        body: JSON.stringify(donor) 
+    });
+}
+
+export async function updateDonor(donor = {}, authProvider){
+    const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
+
+    await fetch(baseUrl + "/" + donor.donorId, {
+        method: 'PUT',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
             'Content-Type': 'application/json',
@@ -52,10 +65,11 @@ export async function postDonor(donor = {}, authProvider) {
 export async function deleteDonor(donorId, authProvider) {
     const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
 
-    const response = await fetch(baseUrl + "/" + donorId, {
+    await fetch(baseUrl + "/" + donorId, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
           }, 
     });
 }
+
