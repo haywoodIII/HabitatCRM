@@ -47,5 +47,15 @@ export async function postDonor(donor = {}, authProvider) {
           }, 
         body: JSON.stringify(donor) 
     });
-      return response.json(); 
+}
+
+export async function deleteDonor(donorId, authProvider) {
+    const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
+
+    const response = await fetch(baseUrl + "/" + donorId, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${jwt.accessToken}`,
+          }, 
+    });
 }

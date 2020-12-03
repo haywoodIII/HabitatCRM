@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from "react-router-dom";
-import { Popconfirm, Table, Tag, Space, Button, Modal } from 'antd';
+import { Popconfirm, Table, Tag, Space, Button, Modal, message } from 'antd';
 import { useMsal } from "@azure/msal-react";
 import {DonationsForm} from './DonationsForm'
 import { DonorsModal } from './DonorsModal';
@@ -19,9 +19,9 @@ function DonorsTable(props) {
     console.log(key);
     }
 
-  const deleteRow = (key, e) => {
+  const deleteDonor = async (donorId, e) => {
     e.preventDefault();
-    console.log(key);
+    props.deleteDonor(donorId);
     }
 
   const handleDonationsCancel = e => {
@@ -74,7 +74,7 @@ function DonorsTable(props) {
         <DonorsModal text="Update" initialValues={record}/>
         <Popconfirm
           title={`Are you sure delete ${record.name}?`}
-          onConfirm={(e) => deleteRow(record.donorId, e)}
+          onConfirm={(e) => deleteDonor(record.donorId, e)}
           okText="Yes"
           cancelText="No"
         >
@@ -112,13 +112,21 @@ export function DonorsPage() {
     setLoading(false);
     }
 
+  const deleteDonor = async (donorId) => {
+    await donorsService.deleteDonor(donorId, instance)
+    .then(setLoading(true))
+    .then(setDataSource(dataSource.filter(donor => donor.donorId !== donorId)))
+    .then(setLoading(false))
+    .catch((e) => message.error('Sorry, something went wrong... contact system administrator'));
+  }
+
     return (
         <>
         <div style={{ marginBottom: 16 }}>
         <DonorsModal text="Add Donor" addDonor={addDonor} />
         <CampaignModal />
         </div>
-            <DonorsTable dataSource={dataSource} loading={loading}/>
+            <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor}/>
         </>
     );
 }
