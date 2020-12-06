@@ -25,7 +25,9 @@ namespace HabitatCRM.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Campaign>>> GetCampaign()
         {
-            return await _context.Campaign.ToListAsync();
+            return await _context.Campaign
+                .Select(c => new Campaign() { CampaignId = c.CampaignId, Name = c.Name})
+                .ToListAsync();
         }
 
         // GET: api/Campaigns/5

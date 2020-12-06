@@ -6,6 +6,7 @@ import {DonationsForm} from './DonationsForm'
 import { DonorsModal } from './DonorsModal';
 import { CampaignModal } from './Campaign';
 import * as donorsService from './services/DonorsService';
+import { getCampaigns, postCampaign } from './services/CampaignsService';
 
 const { Column, ColumnGroup} = Table;
 
@@ -68,7 +69,7 @@ function DonorsTable(props) {
             </Button>,
           ]}
         >
-          <DonationsForm donorId = {record.donorId}/>
+          <DonationsForm donorId ={record.donorId} campaigns={props.campaigns}/>
         </Modal>
       </>
         <DonorsModal addOrUpdate="Update" initialValues={record} updateDonor={props.updateDonor}/>
@@ -94,17 +95,32 @@ export function DonorsPage() {
 
   let [loading, setLoading] = useState(false);
   let [dataSource, setDataSource] = useState(null);
+  let [campaigns, setCampaigns] = useState(null);
+  
   const { instance, accounts, inProgress } = useMsal();
 
   useEffect(() => {
-      async function getDonors() {
-          setLoading(true);
-          let response = await donorsService.getDonors(instance);
-          setDataSource(response);
-          setLoading(false);
+      async function getDonorsAndCampaigns() {
+        setLoading(true);
+         
+        let [donorData, campaignsData] = await Promise.all([donorsService.getDonors(instance), getCampaigns(instance)])
+        setLoading(false);
+        setDataSource(donorData);
+        setCampaigns(campaignsData);
       }
-      getDonors();
+      getDonorsAndCampaigns();
   }, []);
+
+
+  const addCampaign = async (campaign) => {
+
+    await postCampaign(campaign, instance)
+    .catch((error) => {
+        message.error('Sorry, something went wrong... contact system administrator')
+      });
+      setCampaigns(campaigns.concat(campaign));
+      message.success("Campaign added!")
+  }
 
   //TODO move from form to here!
   const addDonor = (donor) => {
@@ -138,9 +154,9 @@ export function DonorsPage() {
         <>
         <div style={{ marginBottom: 16 }}>
         <DonorsModal addOrUpdate="Add" addDonor={addDonor} />
-        <CampaignModal />
+        <CampaignModal addCampaign={addCampaign}/>
         </div>
-            <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor} updateDonor={updateDonor}/>
+            <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor} updateDonor={updateDonor} campaigns={campaigns}/>
         </>
     );
 }

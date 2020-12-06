@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React,  { useState, useEffect } from 'react';
 import { Form, 
     InputNumber, 
     Button,
@@ -67,7 +67,7 @@ export function DonationsForm(props){
         form={form}
       >
 
-        <Form.Item label="Amount:" name={['amount']} rules={[{ type: 'number', required: true }]}>
+        <Form.Item label="Amount:" name='amount' rules={[{ type: 'number', required: true }]}>
             <InputNumber
                 min={0}
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -75,16 +75,21 @@ export function DonationsForm(props){
             />
         </Form.Item>
 
-        <Form.Item label="Campaign:" name={['donation', 'campaign']}>
+        <Form.Item label="Campaign:" name='campaignId'>
             <Select style={{ width: 120 }}
             placeholder="Not Required..."
             showSearch
             style={{ width: 200 }}
             optionFilterProp="children"
             >
-                <Option value="guid1">No Campaign</Option>
+                <>
+                {props.campaigns?.map((c) => 
+                    <Option key={c.campaignId} value={c.campaignId}>{c.name}</Option>
+                )}
+                </>
+                {/* <Option value="guid1">No Campaign</Option>
                 <Option value="guid2">5k</Option>
-                <Option value="guid3">Women's Build</Option>
+                <Option value="guid3">Women's Build</Option> */}
             </Select>
         </Form.Item>
   

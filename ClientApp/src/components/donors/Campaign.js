@@ -1,5 +1,6 @@
 import React, { useState }  from 'react';
 import { Button, Modal, message, Form, Input, DatePicker, InputNumber} from 'antd';
+import {uuidv4} from './services/HelpersService';
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -11,22 +12,23 @@ const layout = {
   wrapperCol: { span: 16 },
 };
 
-function CampaignForm() {
+function CampaignForm(props) {
 
   const [form] = Form.useForm();
-  let [loading, setLoading] = useState(false);
 
-   
-  const onFinish = (values) => {
-    values.startDate = values.rangePicker[0].format('YYYY-MM-DD')
-    values.endDate = values.rangePicker[1].format('YYYY-MM-DD')
-    console.log(values);
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      message.success(`New Campaign Added!`);
-      form.resetFields();
-    }, 3000);
+  const onFinish = async (campaign) => {
+    const startDate = campaign.rangePicker[0].format('YYYY-MM-DD');
+    const endDate = campaign.rangePicker[1].format('YYYY-MM-DD');
+    const campaignId = uuidv4()
+    
+    await props.addCampaign(
+      {goal: campaign.goal, 
+        name: campaign.name, 
+        campaignId: campaignId,
+        startDate: startDate, 
+        endDate: endDate
+      })
+    .then(form.resetFields());
   }
 
   const onFinishFailed = (errorInfo) => {
@@ -43,7 +45,7 @@ function CampaignForm() {
   >
     <Form.Item
       label="Campaign Name"
-      name="campaignName"
+      name="name"
       rules={[{ required: true, message: 'Please input a campaign name!' }]}
     >
       <Input />
@@ -65,7 +67,7 @@ function CampaignForm() {
     </Form.Item>
 
     <Form.Item >
-        <Button type="primary" htmlType="submit" loading={loading}>
+        <Button type="primary" htmlType="submit">
           Submit
         </Button>
 
@@ -80,7 +82,7 @@ function CampaignForm() {
 }
 
 
-export function CampaignModal() {
+export function CampaignModal(props) {
     let [modalVisible, setModalVisible] = useState(false);
   
     const handleModalCancel = e => {
@@ -102,7 +104,7 @@ export function CampaignModal() {
             </Button>,
             ]}
         >
-        <CampaignForm />
+        <CampaignForm addCampaign={props.addCampaign} campaigns={props.campaigns}/>
         </Modal>
       </>
     );
