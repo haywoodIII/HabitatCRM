@@ -144,20 +144,21 @@ export function DonorsForm(props) {
 
     if (props.addOrUpdate == "Add") {
       await donorsService.postDonor(donor, instance)
-      .then(() => message.success(`Adding ${donor.name}`))
-      .then(() => props.addDonor(donor))
-      .then(() => form.resetFields())
-      .catch((_ ) => {
-        message.error('Sorry, something went wrong... contact system administrator')
+      .then(props.addDonor(donor))
+      .then(form.resetFields())
+      .catch((error) => {
+        message.error('Sorry, something went wrong... contact system administrator');
       });
+      message.success(`Adding ${donor.name}`)
+
     } else if (props.addOrUpdate == "Update") {
         await donorsService.updateDonor(donor, instance)
-        .then(() => message.success(`Updating ${donor.name}`))
-        .then(() => props.updateDonor(donor))
-        .then(() => form.resetFields())
-        .catch((_ ) => {
-          message.error('Sorry, something went wrong... contact system administrator')
+        .then(props.updateDonor(donor))
+        .then(form.resetFields())
+        .catch((error) => {
+          message.error('Sorry, something went wrong... contact system administrator');
         });
+        message.success(`Updating ${donor.name}`);
     };
 
   }

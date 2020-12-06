@@ -1,27 +1,14 @@
 
-import {scopes} from "../../../AuthConfig";
 import * as helpers from './HelpersService';
+import * as auth from './AuthService';
 
 const baseUrl = "/api/donors"
 
-export async function getJwtSilentAndPopupIfAuthError(authProvider) {
-    const accounts = authProvider.getAllAccounts();
-    let jwt = null;
-
-    try {
-       jwt = await authProvider.acquireTokenSilent({scopes: scopes, account: accounts[0]});
-    } catch(err) {
-        if (err.name === "ClientAuthError") {
-            jwt = await authProvider.acquireTokenPopup({scopes: scopes, account: accounts[0]});
-        }
-    }
-    return jwt;
-}
-
 export async function getDonors(authProvider) {
-    const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
+    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
     console.log(jwt);
-    const organizationId = jwt.idTokenClaims["extn.Organization"][0];
+    // log missing claims
+    const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
     const response = await fetch(`${baseUrl}?Organization=${organizationId}`, {
         method: 'GET',
         headers: {
@@ -33,11 +20,14 @@ export async function getDonors(authProvider) {
 }
 
 export async function postDonor(donor = {}, authProvider) {
-    const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
+    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
     
     donor.userId = jwt.uniqueId; 
+    // check for missing claims
     donor.organizationId = jwt.idTokenClaims["extn.Organization"][0];
     donor.donorId = helpers.uuidv4();
+
+    console.log(donor);
     
     await fetch(baseUrl, {
         method: 'POST',
@@ -50,7 +40,7 @@ export async function postDonor(donor = {}, authProvider) {
 }
 
 export async function updateDonor(donor = {}, authProvider){
-    const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
+    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
 
     await fetch(baseUrl + "/" + donor.donorId, {
         method: 'PUT',
@@ -63,7 +53,7 @@ export async function updateDonor(donor = {}, authProvider){
 }
 
 export async function deleteDonor(donorId, authProvider) {
-    const jwt = await getJwtSilentAndPopupIfAuthError(authProvider);
+    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
 
     await fetch(baseUrl + "/" + donorId, {
         method: 'DELETE',

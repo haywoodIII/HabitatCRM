@@ -4,6 +4,8 @@ import { Form,
     Button,
     message,
     Select } from 'antd';
+import { postDonation } from './services/DonationsService';
+import { useMsal } from "@azure/msal-react";
 
 const { Option, OptGroup } = Select;
 
@@ -34,15 +36,19 @@ const validateMessages = {
     },
 };
 
-export function DonationsForm(){
+export function DonationsForm(props){
 
     const [form] = Form.useForm();
+    const { instance } = useMsal();
 
-    const onFinish = values => {
-        message.success("Donation added!");
-        form.resetFields();
-        console.log('Success:', values);
-        };
+    const onFinish = async donation => {
+        await postDonation(props.donorId, donation, instance)
+        .then(form.resetFields())
+        .catch((error) => {
+            message.error('Sorry, something went wrong... contact system administrator')
+          });
+          message.success("Donation added!")
+        }
     
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -61,7 +67,7 @@ export function DonationsForm(){
         form={form}
       >
 
-        <Form.Item label="Amount:" name={['donation', 'amount']} rules={[{ type: 'number', required: true }]}>
+        <Form.Item label="Amount:" name={['amount']} rules={[{ type: 'number', required: true }]}>
             <InputNumber
                 min={0}
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}

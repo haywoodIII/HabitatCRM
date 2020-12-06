@@ -68,7 +68,7 @@ function DonorsTable(props) {
             </Button>,
           ]}
         >
-          <DonationsForm/>
+          <DonationsForm donorId = {record.donorId}/>
         </Modal>
       </>
         <DonorsModal addOrUpdate="Update" initialValues={record} updateDonor={props.updateDonor}/>
