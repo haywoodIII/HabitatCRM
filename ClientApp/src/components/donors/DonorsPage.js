@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Link} from "react-router-dom";
 import { Popconfirm, Table, Tag, Space, Button, Modal, message } from 'antd';
 import { useMsal } from "@azure/msal-react";
-import {DonationsForm} from './DonationsForm'
+import {DonationsModal} from './DonationsModal'
 import { DonorsModal } from './DonorsModal';
 import { CampaignModal } from './Campaign';
 import * as donorsService from './services/DonorsService';
@@ -55,37 +55,23 @@ function DonorsTable(props) {
       key='action'
       render = {(_, record) => (
         <Space size="middle">
-      <>
-        <Button onClick={() => setDonationsVisible(true)}>
-          Add Donation
-        </Button>
-        <Modal
-          title="Add Donations"
-          visible={donationsVisible}
-          onCancel={handleDonationsCancel}
-          footer={[
-            <Button key="back" onClick={handleDonationsCancel}>
-              Return
-            </Button>,
-          ]}
+
+          <DonationsModal initialValues={record} campaigns={props.campaigns}/>
+
+          <DonorsModal addOrUpdate="Update" initialValues={record} updateDonor={props.updateDonor}/>
+          <Popconfirm
+            title={`Are you sure delete ${record.name}?`}
+            onConfirm={(e) => deleteDonor(record.donorId, e)}
+            okText="Yes"
+            cancelText="No"
+          >
+          <Button danger>
+            Delete
+          </Button>
+          </Popconfirm>
+          </Space>
+        )}
         >
-          <DonationsForm donorId ={record.donorId} campaigns={props.campaigns}/>
-        </Modal>
-      </>
-        <DonorsModal addOrUpdate="Update" initialValues={record} updateDonor={props.updateDonor}/>
-        <Popconfirm
-          title={`Are you sure delete ${record.name}?`}
-          onConfirm={(e) => deleteDonor(record.donorId, e)}
-          okText="Yes"
-          cancelText="No"
-        >
-        <Button danger>
-          Delete
-        </Button>
-        </Popconfirm>
-        </Space>
-      )}
-      >
       </Column>
     </Table>
   );
