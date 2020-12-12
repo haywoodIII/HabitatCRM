@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col, Statistic, Card, Progress, Typography, Select, List} from 'antd';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import { DollarOutlined} from '@ant-design/icons';
+import { useMsalAuthentication } from "@azure/msal-react";
 
 const { Title } = Typography;
 const { Option, OptGroup } = Select;
@@ -75,6 +76,9 @@ const campaignSelect = (
 )
 
 export function Home (){
+
+  const {login, result, error} = useMsalAuthentication("popup");
+
   return (
     <Row gutter={16}>
       <Col flex={3}>

@@ -1,23 +1,25 @@
 import React, { useState }  from 'react';
 import { Descriptions, Timeline, Card, Row, Col, Rate, Typography, Statistic } from 'antd';
 import { DollarCircleOutlined } from '@ant-design/icons';
+import { useMsal } from "@azure/msal-react";
 
 const { Title } = Typography;
 
-const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
+export function Profile(props) {
 
-export function Profile() {
+    let [donationsSource, setDonationsSource] = useState(null);
 
-    let [donorRating, setDonorRating] = useState(3);
-
+    const donor = props.location.state.donor;
+    const address = donor?.address;
+    const fullAddress = `${address.street} ${address.city}, ${address.state} ${address.zip}`
     return (
         <>
         <Descriptions title="User Info">
-            <Descriptions.Item label="UserName">Mark Meadows</Descriptions.Item>
-            <Descriptions.Item label="Telephone">585-201-1555</Descriptions.Item>
-            <Descriptions.Item label="City">Newark, NY</Descriptions.Item>
-            <Descriptions.Item label="Address">110 Park Street, Newark NY</Descriptions.Item>
-            <Descriptions.Item label="Email">markmeadows@example.com</Descriptions.Item>
+    <Descriptions.Item label="UserName">{donor?.name}</Descriptions.Item>
+    <Descriptions.Item label="Telephone">{donor?.phone}</Descriptions.Item>
+    <Descriptions.Item label="City">{address.city}</Descriptions.Item>
+    <Descriptions.Item label="Address">{fullAddress}</Descriptions.Item>
+    <Descriptions.Item label="Email">{donor?.email}</Descriptions.Item>
         </Descriptions>
 
         <div className="site-card-wrapper">
@@ -31,12 +33,6 @@ export function Profile() {
                         <Timeline.Item>Donated 2015-09-01</Timeline.Item>
                         <Timeline.Item>Last Donated 2015-09-01</Timeline.Item>
                         </Timeline>
-
-                        <Title level={5} style={{marginTop: 100}}>Rate Engagement</Title>
-                        <span>
-                        <Rate tooltips={desc} onChange={(rating) => setDonorRating(rating)} value={donorRating} />
-                        {donorRating ? <span className="ant-rate-text">{desc[donorRating - 1]}</span> : ''}
-                        </span>
                     </Card>
                 </Col>
                 <Col span={8}>

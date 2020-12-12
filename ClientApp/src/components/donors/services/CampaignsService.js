@@ -16,7 +16,7 @@ export async function postCampaign(campaign = {}, authProvider) {
 }
 
 export async function getCampaigns(authProvider) {
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
+    const jwt = await auth.getJwtSilent(authProvider);
 
     const response = await fetch(baseUrl, {
         method: 'GET',

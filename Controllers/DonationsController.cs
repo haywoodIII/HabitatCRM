@@ -30,16 +30,15 @@ namespace HabitatCRM.Controllers
 
         // GET: api/Donations/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Donation>> GetDonation(Guid id)
+        public async Task<ActionResult<List<Donation>>> GetDonations(Guid id)
         {
-            var donation = await _context.Donation.FindAsync(id);
+            var donations = (from dr in _context.Donor
+                             join don in _context.Donation
+                             on dr.DonorId equals don.DonorId
+                             where dr.DonorId == id
+                             select new Donation { CreatedDate = don.CreatedDate, Amount = don.Amount }).ToListAsync();
 
-            if (donation == null)
-            {
-                return NotFound();
-            }
-
-            return donation;
+            return Ok(donations);
         }
 
         // PUT: api/Donations/5

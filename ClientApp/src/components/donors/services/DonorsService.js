@@ -20,7 +20,7 @@ export async function getDonors(authProvider) {
 }
 
 export async function postDonor(donor = {}, authProvider) {
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
+    const jwt = await auth.getJwtSilent(authProvider);
     
     donor.userId = jwt.uniqueId; 
     // check for missing claims
@@ -40,7 +40,7 @@ export async function postDonor(donor = {}, authProvider) {
 }
 
 export async function updateDonor(donor = {}, authProvider){
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
+    const jwt = await auth.getJwtSilent(authProvider);
 
     await fetch(baseUrl + "/" + donor.donorId, {
         method: 'PUT',
@@ -53,7 +53,7 @@ export async function updateDonor(donor = {}, authProvider){
 }
 
 export async function deleteDonor(donorId, authProvider) {
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
+    const jwt = await auth.getJwtSilent(authProvider);
 
     await fetch(baseUrl + "/" + donorId, {
         method: 'DELETE',

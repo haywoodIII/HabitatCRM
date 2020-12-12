@@ -33,7 +33,11 @@ function DonorsTable(props) {
     return (
         <Table dataSource={props.dataSource} rowKey={r => r.donorId} loading={props.loading}>
       <Column title='Name' dataIndex='name' key='name' render={(_, record) =>
-        (<Link to={`profile/${record.donorId}`}>{record.name}</Link>)}>
+        (<Link 
+          to={{ pathname:`profile/${record.donorId}`,
+                state: {donor: record}}}>
+            {record.name}
+        </Link>)}>
       </Column>
       <Column title='Email' dataIndex="email" ></Column>
       <ColumnGroup title="Address">

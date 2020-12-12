@@ -14,3 +14,11 @@ export async function getJwtSilentAndPopupIfAuthError(authProvider) {
     }
     return jwt;
 }
+
+export async function getJwtSilent(authProvider) {
+    const accounts = authProvider.getAllAccounts();
+    let jwt = null;
+    jwt = await authProvider.acquireTokenSilent({scopes: scopes, account: accounts[0]});
+
+    return jwt;
+}
