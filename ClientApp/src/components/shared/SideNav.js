@@ -3,6 +3,8 @@ import { Layout, Menu } from 'antd';
 import { DesktopOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { Link } from "react-router-dom"; 
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
+
 import '../shared/css/SideNav.css';
 
 import { useMsal } from "@azure/msal-react";
@@ -61,14 +63,17 @@ export class SideNav extends React.Component {
                 </Header>
                 <Layout>
                     <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
+                        <AuthenticatedTemplate>
                         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                            <Menu.Item key="1" icon={<PieChartOutlined />}>
-                                <Link to="/">Home</Link>
-                            </Menu.Item>
-                            <Menu.Item key="2" icon={<DesktopOutlined />}> 
-                                <Link to="/donors">Donors</Link>
-                            </Menu.Item>
+                            
+                                <Menu.Item key="1" icon={<PieChartOutlined />}>
+                                        <Link to="/">Home</Link>
+                                </Menu.Item>
+                                <Menu.Item key="2" icon={<DesktopOutlined />}> 
+                                        <Link to="/donors">Donors</Link>
+                                </Menu.Item>
                         </Menu>
+                        </AuthenticatedTemplate>
                     </Sider>
                     <Content className="site-layout-background">
                         <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
