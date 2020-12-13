@@ -32,50 +32,50 @@ function DonorsTable(props) {
 
     return (
         <Table dataSource={props.dataSource} rowKey={r => r.donorId} loading={props.loading}>
-      <Column title='Name' dataIndex='name' key='name' render={(_, record) =>
-        (<Link 
-          to={{ pathname:`profile/${record.donorId}`,
-                state: {donor: record}}}>
-            {record.name}
-        </Link>)}>
-      </Column>
-      <Column title='Email' dataIndex="email" ></Column>
-      <ColumnGroup title="Address">
-        <Column title='Street' dataIndex={['address', 'street']} ></Column>
-        <Column title='City' dataIndex={['address', 'city']} ></Column>
-        <Column title='State' dataIndex={['address', 'state']} ></Column>
-        <Column title='Zip' dataIndex={['address', 'zip']} ></Column>
-      </ColumnGroup>
-      <Column 
-      title='Donor Type' 
-      dataIndex='type'
-      key='type' 
-      render = {(type, color) => <Tag color={color = type === "Business" ? "blue": "green"} key={type}>{type?.toUpperCase()}</Tag>}
-      >
-      </Column>
-      {/* <Column title='Total Donations' dataIndex='donationTotal' key='donationTotal'></Column> */}
-      <Column 
-      title='Action' 
-      key='action'
-      render = {(_, record) => (
-        <Space size="middle">
-
-          <DonationsModal initialValues={record} campaigns={props.campaigns}/>
-
-          <DonorsModal addOrUpdate="Update" initialValues={record} updateDonor={props.updateDonor}/>
-          <Popconfirm
-            title={`Are you sure delete ${record.name}?`}
-            onConfirm={(e) => deleteDonor(record.donorId, e)}
-            okText="Yes"
-            cancelText="No"
+          <Column title='Name' dataIndex='name' key='name' render={(_, record) =>
+            (<Link 
+              to={{ pathname:`profile/${record.donorId}`,
+                    state: {donor: record}}}>
+                {record.name}
+            </Link>)}>
+          </Column>
+          <Column title='Email' dataIndex="email" ></Column>
+          <ColumnGroup title="Address">
+            <Column title='Street' dataIndex={['address', 'street']} ></Column>
+            <Column title='City' dataIndex={['address', 'city']} ></Column>
+            <Column title='State' dataIndex={['address', 'state']} ></Column>
+            <Column title='Zip' dataIndex={['address', 'zip']} ></Column>
+          </ColumnGroup>
+          <Column 
+          title='Donor Type' 
+          dataIndex='type'
+          key='type' 
+          render = {(type, color) => <Tag color={color = type === "Business" ? "blue": "green"} key={type}>{type?.toUpperCase()}</Tag>}
           >
-          <Button danger>
-            Delete
-          </Button>
-          </Popconfirm>
-          </Space>
-        )}
-        >
+          </Column>
+      {/* <Column title='Total Donations' dataIndex='donationTotal' key='donationTotal'></Column> */}
+        <Column 
+        title='Action' 
+        key='action'
+        render = {(_, record) => (
+          <Space size="middle">
+
+            <DonationsModal initialValues={record} campaigns={props.campaigns}/>
+
+            <DonorsModal addOrUpdate="Update" initialValues={record} updateDonor={props.updateDonor}/>
+            <Popconfirm
+              title={`Are you sure delete ${record.name}?`}
+              onConfirm={(e) => deleteDonor(record.donorId, e)}
+              okText="Yes"
+              cancelText="No"
+            >
+            <Button danger>
+              Delete
+            </Button>
+            </Popconfirm>
+            </Space>
+          )}
+          >
       </Column>
     </Table>
   );

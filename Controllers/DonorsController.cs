@@ -24,8 +24,6 @@ namespace HabitatCRM.Controllers
             _context = context;
         }
 
-        // GET: api/Donors
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Donor>>> GetDonors([FromQuery(Name = "organization")] Guid id)
         {

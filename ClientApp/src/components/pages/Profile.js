@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Descriptions, Timeline, Card, Row, Col, Rate, Typography, Statistic } from 'antd';
 import { DollarCircleOutlined } from '@ant-design/icons';
+
+import {getDonorProfile} from '../services/ProfileService'
 
 const { Title } = Typography;
 
@@ -9,6 +11,19 @@ export function Profile(props) {
     const donor = props.location.state.donor;
     const address = donor?.address;
     const fullAddress = `${address.street} ${address.city}, ${address.state} ${address.zip}`
+
+    let [donorProfile, setDonorProfile] = useState(null);
+
+    useEffect(() => {
+        async function getProfile() {
+
+          let profile = await getDonorProfile(donor.donorId);
+          console.log(profile);
+          setDonorProfile(profile);
+        }
+        getProfile();
+    }, []);
+
     return (
         <>
         <Descriptions title="User Info">

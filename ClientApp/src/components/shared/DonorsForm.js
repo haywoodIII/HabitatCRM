@@ -167,6 +167,8 @@ export function DonorsForm(props) {
     <Form {...layout} form={form} onFinish={onFinish} validateMessages={validateMessages} initialValues={props.initialValues}>
       <Form.Item name='donorId' hidden={true}/>
       <Form.Item name='organizationId' hidden={true}/> 
+      <Form.Item name='createdDate' hidden={true}/>
+      <Form.Item name='userId' hidden={true}/> 
       <Form.Item name='name' label="Name" rules={[{ required: true }]}>
           <Input />
       </Form.Item>

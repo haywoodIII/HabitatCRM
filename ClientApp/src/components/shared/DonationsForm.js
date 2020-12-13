@@ -86,9 +86,7 @@ export function DonationsForm(props){
                     <Option key={c.campaignId} value={c.campaignId}>{c.name}</Option>
                 )}
                 </>
-                {/* <Option value="guid1">No Campaign</Option>
-                <Option value="guid2">5k</Option>
-                <Option value="guid3">Women's Build</Option> */}
+                
             </Select>
         </Form.Item>
   
