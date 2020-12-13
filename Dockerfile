@@ -14,8 +14,8 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 RUN apt-get install -y nodejs
 WORKDIR /src
-COPY ["HabitatCRM.csproj", "HabitatCRM/"]
-RUN dotnet restore "./HabitatCRM.csproj"
+COPY ["HabitatCRM.csproj", "."]
+RUN dotnet restore "HabitatCRM.csproj"
 COPY . .
 WORKDIR "/src/."
 RUN dotnet build "HabitatCRM.csproj" -c Release -o /app/build
