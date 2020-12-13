@@ -3,6 +3,20 @@ import * as helpers from './HelpersService';
 
 const baseUrl = "/api/donations"
 
+
+export async function getDonation(donorId, authProvider) {
+    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
+
+    const response = await fetch(`${baseUrl}/`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${jwt.accessToken}`,
+          }, 
+    });
+    const donor = await response.json();
+    return donor;
+}
+
 export async function postDonation(donorId, donation = {}, authProvider) {
     const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
     
