@@ -1,24 +1,24 @@
 
-import {scopes} from "../../../AuthConfig";
+import {scopes, pca} from "../../../AuthConfig";
 
-export async function getJwtSilentAndPopupIfAuthError(authProvider) {
-    const accounts = authProvider.getAllAccounts();
+export async function getJwtSilentAndPopupIfAuthError() {
+    const accounts = pca.getAllAccounts();
     let jwt = null;
 
     try {
-       jwt = await authProvider.acquireTokenSilent({scopes: scopes, account: accounts[0]});
+       jwt = await pca.acquireTokenSilent({scopes: scopes, account: accounts[0]});
     } catch(err) {
         if (err.name === "ClientAuthError") {
-            jwt = await authProvider.acquireTokenPopup({scopes: scopes, account: accounts[0]});
+            jwt = await pca.acquireTokenPopup({scopes: scopes, account: accounts[0]});
         }
     }
     return jwt;
 }
 
-export async function getJwtSilent(authProvider) {
-    const accounts = authProvider.getAllAccounts();
+export async function getJwtSilent() {
+    const accounts = pca.getAllAccounts();
     let jwt = null;
-    jwt = await authProvider.acquireTokenSilent({scopes: scopes, account: accounts[0]});
+    jwt = await pca.acquireTokenSilent({scopes: scopes, account: accounts[0]});
 
     return jwt;
 }

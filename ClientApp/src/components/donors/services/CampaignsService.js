@@ -2,8 +2,8 @@ import * as auth from './AuthService';
 
 const baseUrl = "/api/campaigns"
 
-export async function postCampaign(campaign = {}, authProvider) {
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
+export async function postCampaign(campaign = {}) {
+    const jwt = await auth.getJwtSilent();
 
     await fetch(baseUrl, {
         method: 'POST',
@@ -15,8 +15,8 @@ export async function postCampaign(campaign = {}, authProvider) {
     });
 }
 
-export async function getCampaigns(authProvider) {
-    const jwt = await auth.getJwtSilent(authProvider);
+export async function getCampaigns() {
+    const jwt = await auth.getJwtSilent();
 
     const response = await fetch(baseUrl, {
         method: 'GET',

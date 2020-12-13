@@ -39,10 +39,9 @@ const validateMessages = {
 export function DonationsForm(props){
 
     const [form] = Form.useForm();
-    const { instance } = useMsal();
 
     const onFinish = async donation => {
-        await postDonation(props.donorId, donation, instance)
+        await postDonation(props.donorId, donation)
         .then(form.resetFields())
         .catch((error) => {
             message.error('Sorry, something went wrong... contact system administrator')

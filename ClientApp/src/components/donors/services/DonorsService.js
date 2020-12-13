@@ -4,8 +4,8 @@ import * as auth from './AuthService';
 
 const baseUrl = "/api/donors"
 
-export async function getDonors(authProvider) {
-    const jwt = await auth.getJwtSilent(authProvider);
+export async function getDonors() {
+    const jwt = await auth.getJwtSilent();
 
     const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
     const response = await fetch(`${baseUrl}?Organization=${organizationId}`, {
@@ -18,8 +18,8 @@ export async function getDonors(authProvider) {
     return donor;
 }
 
-export async function postDonor(donor = {}, authProvider) {
-    const jwt = await auth.getJwtSilent(authProvider);
+export async function postDonor(donor = {}) {
+    const jwt = await auth.getJwtSilent();
     
     donor.userId = jwt.uniqueId; 
     // check for missing claims
@@ -38,8 +38,8 @@ export async function postDonor(donor = {}, authProvider) {
     });
 }
 
-export async function updateDonor(donor = {}, authProvider){
-    const jwt = await auth.getJwtSilent(authProvider);
+export async function updateDonor(donor = {}){
+    const jwt = await auth.getJwtSilent();
 
     await fetch(baseUrl + "/" + donor.donorId, {
         method: 'PUT',
@@ -51,8 +51,8 @@ export async function updateDonor(donor = {}, authProvider){
     });
 }
 
-export async function deleteDonor(donorId, authProvider) {
-    const jwt = await auth.getJwtSilent(authProvider);
+export async function deleteDonor(donorId) {
+    const jwt = await auth.getJwtSilent();
 
     await fetch(baseUrl + "/" + donorId, {
         method: 'DELETE',

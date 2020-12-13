@@ -138,12 +138,11 @@ function AddressSelect() {
 export function DonorsForm(props) {
   
   const [form] = Form.useForm();
-  const { instance } = useMsal();
 
   const onFinish = async donor => {
 
     if (props.addOrUpdate == "Add") {
-      await donorsService.postDonor(donor, instance)
+      await donorsService.postDonor(donor)
       .then(props.addDonor(donor))
       .then(form.resetFields())
       .catch((error) => {
@@ -152,7 +151,7 @@ export function DonorsForm(props) {
       message.success(`Adding ${donor.name}`)
 
     } else if (props.addOrUpdate == "Update") {
-        await donorsService.updateDonor(donor, instance)
+        await donorsService.updateDonor(donor)
         .then(props.updateDonor(donor))
         .then(form.resetFields())
         .catch((error) => {

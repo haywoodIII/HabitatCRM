@@ -1,3 +1,5 @@
+import { PublicClientApplication } from "@azure/msal-browser";
+
 // MSAL configuration
 export const msalConfiguration = {
     auth: {
@@ -8,3 +10,5 @@ export const msalConfiguration = {
   };
 
   export const scopes = ["api://ec559591-a3db-4011-8f2d-24dcbfb205e7/API"]
+
+  export const pca = new PublicClientApplication(msalConfiguration);

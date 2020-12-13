@@ -90,13 +90,11 @@ export function DonorsPage() {
   let [dataSource, setDataSource] = useState(null);
   let [campaigns, setCampaigns] = useState(null);
   
-  const { instance, accounts, inProgress } = useMsal();
-
   useEffect(() => {
       async function getDonorsAndCampaigns() {
         setLoading(true);
          
-        let [donorData, campaignsData] = await Promise.all([donorsService.getDonors(instance), getCampaigns(instance)])
+        let [donorData, campaignsData] = await Promise.all([donorsService.getDonors(), getCampaigns()])
         setLoading(false);
         setDataSource(donorData);
         setCampaigns(campaignsData);
@@ -107,7 +105,7 @@ export function DonorsPage() {
 
   const addCampaign = async (campaign) => {
 
-    await postCampaign(campaign, instance)
+    await postCampaign(campaign)
     .catch((error) => {
         message.error('Sorry, something went wrong... contact system administrator')
       });
@@ -136,7 +134,7 @@ export function DonorsPage() {
   }
   
   const deleteDonor = async (donorId) => {
-    await donorsService.deleteDonor(donorId, instance)
+    await donorsService.deleteDonor(donorId)
     .then(setLoading(true))
     .then(setDataSource(dataSource.filter(donor => donor.donorId !== donorId)))
     .then(setLoading(false))
