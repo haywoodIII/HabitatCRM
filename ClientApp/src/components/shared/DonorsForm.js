@@ -5,13 +5,9 @@ import { Form,
   Button,
   Select,
   message } from 'antd';
-import './Donors.css';
+import './css/Donors.css';
 import {states} from '../data/geo';
-import * as donorsService from './services/DonorsService';
-
-import { useMsal } from "@azure/msal-react";
-
-
+import * as donorsService from '../services/DonorsService';
 
 const { Option } = Select;
 

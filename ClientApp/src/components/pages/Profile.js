@@ -1,13 +1,10 @@
-import React, { useState }  from 'react';
+import React from 'react';
 import { Descriptions, Timeline, Card, Row, Col, Rate, Typography, Statistic } from 'antd';
 import { DollarCircleOutlined } from '@ant-design/icons';
-import { useMsal } from "@azure/msal-react";
 
 const { Title } = Typography;
 
 export function Profile(props) {
-
-    let [donationsSource, setDonationsSource] = useState(null);
 
     const donor = props.location.state.donor;
     const address = donor?.address;

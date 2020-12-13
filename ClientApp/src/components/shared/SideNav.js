@@ -3,11 +3,9 @@ import { Layout, Menu } from 'antd';
 import { DesktopOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { Link } from "react-router-dom"; 
-import { Row, Col } from 'antd';
-import './SideNav.css';
+import '../shared/css/SideNav.css';
 
 import { useMsal } from "@azure/msal-react";
-import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
 
 const { Header, Content, Sider } = Layout;
 

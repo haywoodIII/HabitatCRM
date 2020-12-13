@@ -1,5 +1,5 @@
 
-import {scopes, pca} from "../../../AuthConfig";
+import {scopes, pca} from "../../AuthConfig";
 
 export async function getJwtSilentAndPopupIfAuthError() {
     const accounts = pca.getAllAccounts();
