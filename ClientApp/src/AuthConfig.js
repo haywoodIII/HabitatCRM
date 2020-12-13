@@ -4,8 +4,8 @@ import { PublicClientApplication } from "@azure/msal-browser";
 export const msalConfiguration = {
     auth: {
         clientId: "7385e621-98a1-41b4-b9e9-2403d668c173",
-        authority: "https://login.microsoftonline.com/8f51ea41-de84-4476-b7db-a7c3025d3002/",
-        redirectUri: 'https://localhost:5001/authentication/login-callback'
+        authority: "https://login.microsoftonline.com/8f51ea41-de84-4476-b7db-a7c3025d3002/"
+       
     }
   };
 

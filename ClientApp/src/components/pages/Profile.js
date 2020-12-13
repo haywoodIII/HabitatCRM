@@ -42,9 +42,9 @@ export function Profile(props) {
                 </Col>
                 <Col span={8}>
                     <Card title="Stats" bordered={false}>
-                        <Statistic title="Total Donations" value={donorProfile?.totalDonations} />
+                        <Statistic title="Total Donations:" value={donorProfile?.totalDonations} />
                         <Statistic
-                            title="Active"
+                            title="Total Amount:"
                             value={donorProfile?.totalAmountDonated}
                             precision={2}
                             valueStyle={{ color: '#3f8600' }}
