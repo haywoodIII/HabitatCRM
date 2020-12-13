@@ -5,9 +5,8 @@ import * as auth from './AuthService';
 const baseUrl = "/api/donors"
 
 export async function getDonors(authProvider) {
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
-    console.log(jwt);
-    // log missing claims
+    const jwt = await auth.getJwtSilent(authProvider);
+
     const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
     const response = await fetch(`${baseUrl}?Organization=${organizationId}`, {
         method: 'GET',

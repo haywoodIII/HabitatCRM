@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {Link} from "react-router-dom";
 import { Popconfirm, Table, Tag, Space, Button, Modal, message } from 'antd';
 import { useMsal } from "@azure/msal-react";
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
+import { useMsalAuthentication } from "@azure/msal-react";
+
 import {DonationsModal} from './DonationsModal'
 import { DonorsModal } from './DonorsModal';
 import { CampaignModal } from './Campaign';
@@ -141,12 +144,12 @@ export function DonorsPage() {
   }
 
     return (
-        <>
+      <AuthenticatedTemplate>
         <div style={{ marginBottom: 16 }}>
         <DonorsModal addOrUpdate="Add" addDonor={addDonor} />
         <CampaignModal addCampaign={addCampaign}/>
         </div>
             <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor} updateDonor={updateDonor} campaigns={campaigns}/>
-        </>
+        </AuthenticatedTemplate>
     );
 }

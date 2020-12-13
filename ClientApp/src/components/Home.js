@@ -77,8 +77,6 @@ const campaignSelect = (
 
 export function Home (){
 
-  const {login, result, error} = useMsalAuthentication("popup");
-
   return (
     <Row gutter={16}>
       <Col flex={3}>
