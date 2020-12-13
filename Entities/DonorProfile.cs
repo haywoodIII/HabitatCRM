@@ -10,5 +10,10 @@ namespace HabitatCRM.Entities
         public List<DateTime?> DonationHistory { get; set; }
 
         public DateTime? DonorCreationDate { get; set; }
+
+        public int TotalDonations { get; set; }
+
+        public decimal TotalAmountDonated { get; set; }
+
     }
 }

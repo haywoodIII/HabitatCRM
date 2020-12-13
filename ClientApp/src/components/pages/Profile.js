@@ -6,6 +6,7 @@ import {getDonorProfile} from '../services/ProfileService'
 
 const { Title } = Typography;
 
+
 export function Profile(props) {
 
     const donor = props.location.state.donor;
@@ -18,41 +19,33 @@ export function Profile(props) {
         async function getProfile() {
 
           let profile = await getDonorProfile(donor.donorId);
-          console.log(profile);
           setDonorProfile(profile);
         }
         getProfile();
     }, []);
 
+
     return (
         <>
         <Descriptions title="User Info">
-    <Descriptions.Item label="UserName">{donor?.name}</Descriptions.Item>
-    <Descriptions.Item label="Telephone">{donor?.phone}</Descriptions.Item>
-    <Descriptions.Item label="City">{address.city}</Descriptions.Item>
-    <Descriptions.Item label="Address">{fullAddress}</Descriptions.Item>
-    <Descriptions.Item label="Email">{donor?.email}</Descriptions.Item>
+            <Descriptions.Item label="UserName">{donor?.name}</Descriptions.Item>
+            <Descriptions.Item label="Telephone">{donor?.phone}</Descriptions.Item>
+            <Descriptions.Item label="City">{address.city}</Descriptions.Item>
+            <Descriptions.Item label="Address">{fullAddress}</Descriptions.Item>
+            <Descriptions.Item label="Email">{donor?.email}</Descriptions.Item>
         </Descriptions>
 
         <div className="site-card-wrapper">
             <Row gutter={16} style={{marginTop: 100}}>
                 <Col span={8}>
-                    <Card title="Donation History" bordered={false}>
-                        <Timeline>
-                        <Timeline.Item>Became a Donor 2015-09-01</Timeline.Item>
-                        <Timeline.Item>Donated 2015-09-01</Timeline.Item>
-                        <Timeline.Item>Donated 2015-09-01</Timeline.Item>
-                        <Timeline.Item>Donated 2015-09-01</Timeline.Item>
-                        <Timeline.Item>Last Donated 2015-09-01</Timeline.Item>
-                        </Timeline>
-                    </Card>
+                <TimelineCard profile={donorProfile}></TimelineCard>
                 </Col>
                 <Col span={8}>
                     <Card title="Stats" bordered={false}>
-                        <Statistic title="Total Donations" value={3} />
+                        <Statistic title="Total Donations" value={donorProfile?.totalDonations} />
                         <Statistic
                             title="Active"
-                            value={11.28}
+                            value={donorProfile?.totalAmountDonated}
                             precision={2}
                             valueStyle={{ color: '#3f8600' }}
                             prefix={<DollarCircleOutlined style={{verticalAlign: "baseline"}}/>}
@@ -62,5 +55,19 @@ export function Profile(props) {
             </Row>
         </div>
         </>
+    );
+}
+
+function TimelineCard(props) {
+    
+    const timelineItem = props?.profile?.donationHistory.map((date) =>
+        <Timeline.Item>Donated on {new Date(date).toLocaleString("en-US")}</Timeline.Item>
+    );
+
+
+    return(
+        <Card title="Donation History" bordered={false}>
+            {timelineItem}
+        </Card>
     );
 }
