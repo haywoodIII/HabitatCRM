@@ -5,7 +5,7 @@ const baseUrl = "/api/campaigns"
 export async function postCampaign(campaign = {}) {
     const jwt = await auth.getJwtSilent();
 
-    await fetch(baseUrl, {
+    const response = await fetch(baseUrl, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
@@ -13,6 +13,10 @@ export async function postCampaign(campaign = {}) {
           }, 
         body: JSON.stringify(campaign) 
     });
+
+    if(!response.ok) {
+        throw new Error('Something went wrong.');
+    } 
 }
 
 export async function getCampaigns() {

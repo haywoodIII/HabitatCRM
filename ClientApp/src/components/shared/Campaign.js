@@ -57,6 +57,7 @@ function CampaignForm(props) {
       rules={[{ required: true, message: 'Please input a campaign goal!' }]}
     >
       <InputNumber
+        min={0}
         formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
         parser={value => value.replace(/\$\s?|(,*)/g, '')}
       />

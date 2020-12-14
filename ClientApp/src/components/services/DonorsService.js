@@ -6,7 +6,6 @@ const baseUrl = "/api/donors"
 
 export async function getDonors() {
     const jwt = await auth.getJwtSilent();
-
     const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
     const response = await fetch(`${baseUrl}?Organization=${organizationId}`, {
         method: 'GET',
@@ -22,13 +21,10 @@ export async function postDonor(donor = {}) {
     const jwt = await auth.getJwtSilent();
     
     donor.userId = jwt.uniqueId; 
-    // check for missing claims
     donor.organizationId = jwt.idTokenClaims["extn.Organization"][0];
     donor.donorId = helpers.uuidv4();
-
-    console.log(donor);
     
-    await fetch(baseUrl, {
+    const response =  await fetch(baseUrl, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
@@ -36,12 +32,16 @@ export async function postDonor(donor = {}) {
           }, 
         body: JSON.stringify(donor) 
     });
+
+    if(!response.ok) {
+        throw new Error('Something went wrong.');
+    } 
 }
 
 export async function updateDonor(donor = {}){
     const jwt = await auth.getJwtSilent();
 
-    await fetch(baseUrl + "/" + donor.donorId, {
+    const response = await fetch(baseUrl + "/" + donor.donorId, {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
@@ -49,16 +49,25 @@ export async function updateDonor(donor = {}){
           }, 
         body: JSON.stringify(donor) 
     });
+
+    if(!response.ok) {
+        throw new Error('Something went wrong.');
+    } 
 }
 
 export async function deleteDonor(donorId) {
     const jwt = await auth.getJwtSilent();
 
-    await fetch(baseUrl + "/" + donorId, {
+    const response = await fetch(baseUrl + "/" + donorId, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
           }, 
     });
+
+    if(!response.ok) {
+        throw new Error('Something went wrong.');
+    } 
+
 }
 

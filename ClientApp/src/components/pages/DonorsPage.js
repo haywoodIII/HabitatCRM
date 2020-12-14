@@ -12,23 +12,11 @@ const { Column, ColumnGroup} = Table;
 
 function DonorsTable(props) {
 
-  let [donationsVisible, setDonationsVisible] = useState(false);
-
-  const updateRow = (key, e) => {
-    e.preventDefault();
-    setDonationsVisible(true)
-    console.log(key);
-    }
 
   const deleteDonor = async (donorId, e) => {
     e.preventDefault();
     props.deleteDonor(donorId);
     }
-
-  const handleDonationsCancel = e => {
-      console.log(e);
-      setDonationsVisible(false);
-  };
 
     return (
         <Table dataSource={props.dataSource} rowKey={r => r.donorId} loading={props.loading}>
@@ -53,7 +41,7 @@ function DonorsTable(props) {
           render = {(type, color) => <Tag color={color = type === "Business" ? "blue": "green"} key={type}>{type?.toUpperCase()}</Tag>}
           >
           </Column>
-      {/* <Column title='Total Donations' dataIndex='donationTotal' key='donationTotal'></Column> */}
+   
         <Column 
         title='Action' 
         key='action'
@@ -102,41 +90,38 @@ export function DonorsPage() {
 
   const addCampaign = async (campaign) => {
 
-    await postCampaign(campaign)
-    .catch((error) => {
-        message.error('Sorry, something went wrong... contact system administrator')
-      });
+    try {
+      await postCampaign(campaign);
       setCampaigns(campaigns.concat(campaign));
-      message.success("Campaign added!")
+      message.success("Campaign added!");
+    }
+    catch(error) {
+      message.error('Sorry, something went wrong... contact system administrator')
+    }
   }
 
   const addDonor = (donor) => {
-    setLoading(true);
     setDataSource([...dataSource, donor]);
-    setLoading(false);
   }
 
   const updateDonor = (donor) => {
-    setLoading(true);
-
     var newData = dataSource.map(el => {
       if(el.donorId == donor.donorId)
          return Object.assign({}, donor, {valid:true})
       return el
   });
-
     setDataSource(newData);
-    setLoading(false);
   }
   
   const deleteDonor = async (donorId) => {
-    await donorsService.deleteDonor(donorId)
-    .then(setLoading(true))
-    .then(setDataSource(dataSource.filter(donor => donor.donorId !== donorId)))
-    .then(setLoading(false))
-    .catch((e) => message.error('Sorry, something went wrong... contact system administrator'));
-  }
 
+    try {
+      await donorsService.deleteDonor(donorId);
+      setDataSource(dataSource.filter(donor => donor.donorId !== donorId));
+    }catch(error){
+      message.error('Sorry, something went wrong... contact system administrator')
+    }
+  }
     return (
       <>
         <div style={{ marginBottom: 16 }}>

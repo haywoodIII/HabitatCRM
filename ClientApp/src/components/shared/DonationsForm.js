@@ -41,14 +41,14 @@ export function DonationsForm(props){
     const [form] = Form.useForm();
 
     const onFinish = async donation => {
-        await postDonation(props.donorId, donation)
-        .then(form.resetFields())
-        .catch((error) => {
-            message.error('Sorry, something went wrong... contact system administrator')
-          });
-          message.success("Donation added!")
+        try {
+            await postDonation(props.donorId, donation)
+            .then(form.resetFields());
+            message.success(`Adding a $${donation.amount} donation`)
+        }catch(error){
+            message.error('Sorry, something went wrong... contact system administrator');
         }
-    
+    }
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
         };

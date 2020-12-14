@@ -138,24 +138,25 @@ export function DonorsForm(props) {
   const onFinish = async donor => {
 
     if (props.addOrUpdate == "Add") {
-      await donorsService.postDonor(donor)
-      .then(props.addDonor(donor))
-      .then(form.resetFields())
-      .catch((error) => {
-        message.error('Sorry, something went wrong... contact system administrator');
-      });
-      message.success(`Adding ${donor.name}`)
+      try {
+          await donorsService.postDonor(donor)
+          .then(form.resetFields());
+          props.addDonor(donor);
+          message.success(`Adding ${donor.name}`);
+      } catch(error) {
+          message.error('Sorry, something went wrong... contact system administrator');
+        }
 
     } else if (props.addOrUpdate == "Update") {
-        await donorsService.updateDonor(donor)
-        .then(props.updateDonor(donor))
-        .then(form.resetFields())
-        .catch((error) => {
-          message.error('Sorry, something went wrong... contact system administrator');
-        });
-        message.success(`Updating ${donor.name}`);
-    };
 
+      try {
+        await donorsService.updateDonor(donor)
+        props.updateDonor(donor); 
+        message.success(`Updating ${donor.name}`);
+      } catch(error) {
+        message.error('Sorry, something went wrong... contact system administrator');
+      }  
+    };
   }
 
 
@@ -176,7 +177,7 @@ export function DonorsForm(props) {
           <Input />
       </Form.Item>
       <Form.Item name='age' label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
-          <InputNumber />
+          <InputNumber  min={0}/>
       </Form.Item>
       <AddressSelect/>
       <GenderSelect/>

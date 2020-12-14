@@ -24,7 +24,7 @@ export async function postDonation(donorId, donation = {}) {
     donation.donorId = donorId;   
     donation.donationId = helpers.uuidv4();
 
-    await fetch(baseUrl, {
+    const response = await fetch(baseUrl, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
@@ -32,4 +32,8 @@ export async function postDonation(donorId, donation = {}) {
           }, 
         body: JSON.stringify(donation) 
     });
+
+    if(!response.ok) {
+        throw new Error('Something went wrong.');
+    } 
 }
