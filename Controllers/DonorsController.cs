@@ -9,6 +9,8 @@ using HabitatCRM.Data;
 using HabitatCRM.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Routing;
 
 namespace HabitatCRM.Controllers
 {
@@ -25,14 +27,11 @@ namespace HabitatCRM.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Donor>>> GetDonors([FromQuery(Name = "organization")] Guid id)
+        [EnableQuery()]
+        public IQueryable GetDonors()
         {
-            List<Donor> donors = await _context.Donor
-                .Where(d => d.OrganizationId == id)
-                .Include(d => d.Address)
-                .ToListAsync();
-
-            return donors;
+            return _context.Donor
+                .AsQueryable();
         }
 
         // GET: api/Donors/5
@@ -79,6 +78,44 @@ namespace HabitatCRM.Controllers
 
             return NoContent();
         }
+
+        [ODataRoute("({key})")]
+        [HttpPatch]
+        public async Task<IActionResult> PatchDonor([FromODataUri] Guid key, [FromBody] Delta<Donor> donor)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var entity = await _context.Donor.FindAsync(key);
+
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            donor.Patch(entity);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DonorExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
+
+
 
         // POST: api/Donors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

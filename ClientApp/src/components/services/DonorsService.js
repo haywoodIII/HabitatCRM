@@ -7,14 +7,14 @@ const baseUrl = "/api/donors"
 export async function getDonors() {
     const jwt = await auth.getJwtSilent();
     const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
-    const response = await fetch(`${baseUrl}?Organization=${organizationId}`, {
+    const response = await fetch(`${baseUrl}?$filter=organizationId eq ${organizationId}&$expand=address`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
           }, 
     });
-    const donor = await response.json();
-    return donor;
+    const odataResponse = await response.json();
+    return odataResponse.value;
 }
 
 export async function postDonor(donor = {}) {
