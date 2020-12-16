@@ -73,16 +73,16 @@ export function DonorsPage() {
 
   let [loading, setLoading] = useState(false);
   let [dataSource, setDataSource] = useState(null);
-  let [campaigns, setCampaigns] = useState(null);
+  let [campaignsSource, setCampaignsSource] = useState(null);
   
   useEffect(() => {
       async function getDonorsAndCampaigns() {
         setLoading(true);
          
-        let [donorData, campaignsData] = await Promise.all([donorsService.getDonors(), getCampaigns()])
+        let [donorResponse, campaignsResponse] = await Promise.all([donorsService.getDonors(), getCampaigns()])
         setLoading(false);
-        setDataSource(donorData);
-        setCampaigns(campaignsData);
+        setDataSource(donorResponse);
+        setCampaignsSource(campaignsResponse);
       }
       getDonorsAndCampaigns();
   }, []);
@@ -92,7 +92,7 @@ export function DonorsPage() {
 
     try {
       await postCampaign(campaign);
-      setCampaigns(campaigns.concat(campaign));
+      setCampaignsSource(campaignsSource.concat(campaign));
       message.success("Campaign added!");
     }
     catch(error) {
@@ -128,7 +128,7 @@ export function DonorsPage() {
         <DonorsModal addOrUpdate="Add" addDonor={addDonor} />
         <CampaignModal addCampaign={addCampaign}/>
         </div>
-        <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor} updateDonor={updateDonor} campaigns={campaigns}/>
+        <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor} updateDonor={updateDonor} campaigns={campaignsSource}/>
       </>
     );
 }

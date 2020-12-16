@@ -23,6 +23,7 @@ export async function postDonor(donor = {}) {
     donor.userId = jwt.uniqueId; 
     donor.organizationId = jwt.idTokenClaims["extn.Organization"][0];
     donor.donorId = helpers.uuidv4();
+    donor.address.addressId = helpers.uuidv4();
     
     const response =  await fetch(baseUrl, {
         method: 'POST',
@@ -38,21 +39,43 @@ export async function postDonor(donor = {}) {
     } 
 }
 
-export async function updateDonor(donor = {}){
+export async function updateDonor(donor = {}) {
+
     const jwt = await auth.getJwtSilent();
 
-    const response = await fetch(baseUrl + "/" + donor.donorId, {
-        method: 'PUT',
+    const addressDto = donor.address;
+    const donorDto = donor; 
+    delete donorDto.address;
+
+    let response = await fetch(`${baseUrl}(${donor.donorId})`, {
+        method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
             'Content-Type': 'application/json',
-          }, 
-        body: JSON.stringify(donor) 
+        },
+        body: JSON.stringify(donorDto)
     });
 
-    if(!response.ok) {
+    donor.address = addressDto;
+
+    if (!response.ok) {
         throw new Error('Something went wrong.');
     } 
+
+    response = await fetch(`/api/addresses(${addressDto.addressId})`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${jwt.accessToken}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(addressDto)
+    });
+
+    if (!response.ok) {
+        throw new Error('Something went wrong.');
+    } 
+
+    return donor;
 }
 
 export async function deleteDonor(donorId) {

@@ -1,4 +1,5 @@
 import * as auth from './AuthService';
+import * as helpers from './HelpersService';
 
 const baseUrl = "/api/campaigns"
 
@@ -21,14 +22,15 @@ export async function postCampaign(campaign = {}) {
 
 export async function getCampaigns() {
     const jwt = await auth.getJwtSilent();
+    const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
 
-    const response = await fetch(baseUrl, {
+    const response = await fetch(`${baseUrl}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
           },    
     });
     const campaigns = await response.json();
-    return campaigns;
+    return campaigns.value;
 }
 

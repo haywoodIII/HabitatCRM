@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HabitatCRM.Data;
 using HabitatCRM.Entities;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData;
 
 namespace HabitatCRM.Controllers
 {
@@ -41,6 +43,43 @@ namespace HabitatCRM.Controllers
 
             return address;
         }
+
+        [ODataRoute("({key})")]
+        [HttpPatch]
+        public async Task<IActionResult> PatchAddress([FromODataUri] Guid key, [FromBody] Delta<Address> address)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var entity = await _context.Address.FindAsync(key);
+
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            address.Patch(entity);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AddressExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
+
 
         // PUT: api/Addresses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

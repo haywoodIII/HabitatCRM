@@ -82,6 +82,7 @@ function AddressSelect() {
   return(
     <div>
       <Form.Item label="Address" required={true}>
+      <Form.Item name={['address', 'addressId']} hidden={true}/>
       <Input.Group>
         <Form.Item
           name={['address', 'street']}
@@ -150,9 +151,9 @@ export function DonorsForm(props) {
     } else if (props.addOrUpdate == "Update") {
 
       try {
-        await donorsService.updateDonor(donor)
-        props.updateDonor(donor); 
-        message.success(`Updating ${donor.name}`);
+            const updatedDonor = await donorsService.updateDonor(donor)
+            props.updateDonor(updatedDonor); 
+            message.success(`Updating ${donor.name}`);
       } catch(error) {
         message.error('Sorry, something went wrong... contact system administrator');
       }  
@@ -167,9 +168,6 @@ export function DonorsForm(props) {
   return (
     <Form {...layout} form={form} onFinish={onFinish} validateMessages={validateMessages} initialValues={props.initialValues}>
       <Form.Item name='donorId' hidden={true}/>
-      <Form.Item name='organizationId' hidden={true}/> 
-      <Form.Item name='createdDate' hidden={true}/>
-      <Form.Item name='userId' hidden={true}/> 
       <Form.Item name='name' label="Name" rules={[{ required: true }]}>
           <Input />
       </Form.Item>

@@ -99,6 +99,7 @@ namespace HabitatCRM
             odataBuilder.EnableLowerCamelCase();
 
             odataBuilder.EntitySet<Donor>("Donors");
+            odataBuilder.EntitySet<Address>("Addresses");
             odataBuilder.EntitySet<Donation>("Donations");
             odataBuilder.EntitySet<Campaign>("Campaigns");
 

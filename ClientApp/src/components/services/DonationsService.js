@@ -4,10 +4,11 @@ import * as helpers from './HelpersService';
 const baseUrl = "/api/donations"
 
 
-export async function getDonation(donorId) {
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError();
+export async function getDonation() {
+    const jwt = await auth.getJwtSilent();
+    const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
 
-    const response = await fetch(`${baseUrl}/`, {
+    const response = await fetch(`${baseUrl}/organizationId`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
@@ -18,9 +19,8 @@ export async function getDonation(donorId) {
 }
 
 export async function postDonation(donorId, donation = {}) {
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError();
+    const jwt = await auth.getJwtSilent();
     
-    donation.userId = jwt.uniqueId;  
     donation.donorId = donorId;   
     donation.donationId = helpers.uuidv4();
 
