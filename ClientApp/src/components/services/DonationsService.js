@@ -6,9 +6,9 @@ const baseUrl = "/api/donations"
 
 export async function getDonation() {
     const jwt = await auth.getJwtSilent();
-    const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
+    const organizationId = auth.getOrganizationId(jwt);
 
-    const response = await fetch(`${baseUrl}/organizationId`, {
+    const response = await fetch(`${baseUrl}?$filter=organizationId eq ${organizationId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
@@ -20,9 +20,11 @@ export async function getDonation() {
 
 export async function postDonation(donorId, donation = {}) {
     const jwt = await auth.getJwtSilent();
-    
+    const organizationId = auth.getOrganizationId(jwt);
+
     donation.donorId = donorId;   
     donation.donationId = helpers.uuidv4();
+    donation.organizationId = organizationId;
 
     const response = await fetch(baseUrl, {
         method: 'POST',

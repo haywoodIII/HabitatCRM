@@ -6,7 +6,7 @@ const baseUrl = "/api/donors"
 
 export async function getDonors() {
     const jwt = await auth.getJwtSilent();
-    const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
+    const organizationId = jwt?.idTokenClaims["extn.Organization"];
     const response = await fetch(`${baseUrl}?$filter=organizationId eq ${organizationId}&$expand=address`, {
         method: 'GET',
         headers: {

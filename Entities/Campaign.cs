@@ -11,19 +11,16 @@ namespace HabitatCRM.Entities
     {
         [Key]
         public Guid CampaignId { get; set; }
-
         public string Name { get; set; }
-
         [Column(TypeName = "decimal(18,2)")]
         public decimal Goal { get; set; }
-
         public DateTime StartDate { get; set; }
-
         public DateTime EndDate { get; set; }
 
 
         public List<Donation> Donations { get; set; }
-
+        public Organization Organization { get; set; }
+        public Guid OrganizationId { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime? CreatedDate { get; set; }

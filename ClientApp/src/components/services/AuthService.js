@@ -22,3 +22,7 @@ export async function getJwtSilent() {
 
     return jwt;
 }
+
+export function getOrganizationId(jwt){
+    return jwt?.idTokenClaims["extn.Organization"][0];
+}

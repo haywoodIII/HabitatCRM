@@ -5,6 +5,7 @@ const baseUrl = "/api/campaigns"
 
 export async function postCampaign(campaign = {}) {
     const jwt = await auth.getJwtSilent();
+    campaign.organizationId = jwt.idTokenClaims["extn.Organization"][0];
 
     const response = await fetch(baseUrl, {
         method: 'POST',
@@ -22,9 +23,9 @@ export async function postCampaign(campaign = {}) {
 
 export async function getCampaigns() {
     const jwt = await auth.getJwtSilent();
-    const organizationId = jwt?.idTokenClaims["extn.Organization"]?.[0] ?? helpers.emptyGuid();
+    const organizationId = auth.getOrganizationId(jwt);
 
-    const response = await fetch(`${baseUrl}`, {
+    const response = await fetch(`${baseUrl}?$filter=organizationId eq ${organizationId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
