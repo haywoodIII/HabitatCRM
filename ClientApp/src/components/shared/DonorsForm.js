@@ -5,13 +5,9 @@ import { Form,
   Button,
   Select,
   message } from 'antd';
-import './Donors.css';
+import './css/Donors.css';
 import {states} from '../data/geo';
-import * as donorsService from './services/DonorsService';
-
-import { useMsal } from "@azure/msal-react";
-
-
+import * as donorsService from '../services/DonorsService';
 
 const { Option } = Select;
 
@@ -86,6 +82,7 @@ function AddressSelect() {
   return(
     <div>
       <Form.Item label="Address" required={true}>
+      <Form.Item name={['address', 'addressId']} hidden={true}/>
       <Input.Group>
         <Form.Item
           name={['address', 'street']}
@@ -138,29 +135,29 @@ function AddressSelect() {
 export function DonorsForm(props) {
   
   const [form] = Form.useForm();
-  const { instance } = useMsal();
 
   const onFinish = async donor => {
 
     if (props.addOrUpdate == "Add") {
-      await donorsService.postDonor(donor, instance)
-      .then(props.addDonor(donor))
-      .then(form.resetFields())
-      .catch((error) => {
-        message.error('Sorry, something went wrong... contact system administrator');
-      });
-      message.success(`Adding ${donor.name}`)
+      try {
+          await donorsService.postDonor(donor)
+          .then(form.resetFields());
+          props.addDonor(donor);
+          message.success(`Adding ${donor.name}`);
+      } catch(error) {
+          message.error('Sorry, something went wrong... contact system administrator');
+        }
 
     } else if (props.addOrUpdate == "Update") {
-        await donorsService.updateDonor(donor, instance)
-        .then(props.updateDonor(donor))
-        .then(form.resetFields())
-        .catch((error) => {
-          message.error('Sorry, something went wrong... contact system administrator');
-        });
-        message.success(`Updating ${donor.name}`);
-    };
 
+      try {
+            const updatedDonor = await donorsService.updateDonor(donor)
+            props.updateDonor(updatedDonor); 
+            message.success(`Updating ${donor.name}`);
+      } catch(error) {
+        message.error('Sorry, something went wrong... contact system administrator');
+      }  
+    };
   }
 
 
@@ -171,7 +168,6 @@ export function DonorsForm(props) {
   return (
     <Form {...layout} form={form} onFinish={onFinish} validateMessages={validateMessages} initialValues={props.initialValues}>
       <Form.Item name='donorId' hidden={true}/>
-      <Form.Item name='organizationId' hidden={true}/> 
       <Form.Item name='name' label="Name" rules={[{ required: true }]}>
           <Input />
       </Form.Item>
@@ -179,7 +175,7 @@ export function DonorsForm(props) {
           <Input />
       </Form.Item>
       <Form.Item name='age' label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
-          <InputNumber />
+          <InputNumber  min={0}/>
       </Form.Item>
       <AddressSelect/>
       <GenderSelect/>

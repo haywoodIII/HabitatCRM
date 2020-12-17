@@ -1,6 +1,6 @@
 import React, { useState }  from 'react';
-import { Button, Modal, message, Form, Input, DatePicker, InputNumber} from 'antd';
-import {uuidv4} from './services/HelpersService';
+import { Button, Modal, Form, Input, DatePicker, InputNumber} from 'antd';
+import {uuidv4} from '../services/HelpersService';
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -57,6 +57,7 @@ function CampaignForm(props) {
       rules={[{ required: true, message: 'Please input a campaign goal!' }]}
     >
       <InputNumber
+        min={0}
         formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
         parser={value => value.replace(/\$\s?|(,*)/g, '')}
       />

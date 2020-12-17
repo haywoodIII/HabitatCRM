@@ -4,10 +4,11 @@ import * as helpers from './HelpersService';
 const baseUrl = "/api/donations"
 
 
-export async function getDonation(donorId, authProvider) {
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
+export async function getDonation() {
+    const jwt = await auth.getJwtSilent();
+    const organizationId = auth.getOrganizationId(jwt);
 
-    const response = await fetch(`${baseUrl}/`, {
+    const response = await fetch(`${baseUrl}?$filter=organizationId eq ${organizationId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
@@ -17,14 +18,15 @@ export async function getDonation(donorId, authProvider) {
     return donor;
 }
 
-export async function postDonation(donorId, donation = {}, authProvider) {
-    const jwt = await auth.getJwtSilentAndPopupIfAuthError(authProvider);
-    
-    donation.userId = jwt.uniqueId;  
+export async function postDonation(donorId, donation = {}) {
+    const jwt = await auth.getJwtSilent();
+    const organizationId = auth.getOrganizationId(jwt);
+
     donation.donorId = donorId;   
     donation.donationId = helpers.uuidv4();
+    donation.organizationId = organizationId;
 
-    await fetch(baseUrl, {
+    const response = await fetch(baseUrl, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
@@ -32,4 +34,8 @@ export async function postDonation(donorId, donation = {}, authProvider) {
           }, 
         body: JSON.stringify(donation) 
     });
+
+    if(!response.ok) {
+        throw new Error('Something went wrong.');
+    } 
 }

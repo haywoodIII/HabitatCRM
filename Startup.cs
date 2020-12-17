@@ -10,6 +10,12 @@ using HabitatCRM.Data;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.OData.Edm;
+using Microsoft.AspNet.OData.Builder;
+using HabitatCRM.Entities;
 
 namespace HabitatCRM
 {
@@ -25,8 +31,7 @@ namespace HabitatCRM
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(AzureADDefaults.JwtBearerAuthenticationScheme)
-                .AddAzureADBearer(options => Configuration.Bind("AzureAd", options));
+            services.AddMicrosoftIdentityWebApiAuthentication(Configuration, "AzureAd");
 
             services.AddControllersWithViews()
                  .AddNewtonsoftJson(options =>
@@ -41,6 +46,8 @@ namespace HabitatCRM
 
             services.AddDbContext<HabitatCRMContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("HabitatCRMContext")));
+
+            services.AddOData();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +78,8 @@ namespace HabitatCRM
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.Select().Filter().OrderBy().Expand().Count().MaxTop(50);
+                endpoints.MapODataRoute("api", "api", GetEdmModel());
             });
 
             app.UseSpa(spa =>
@@ -83,5 +92,19 @@ namespace HabitatCRM
                 }
             });
         }
+
+        private IEdmModel GetEdmModel()
+        {
+            var odataBuilder = new ODataConventionModelBuilder();
+            odataBuilder.EnableLowerCamelCase();
+
+            odataBuilder.EntitySet<Donor>("Donors");
+            odataBuilder.EntitySet<Address>("Addresses");
+            odataBuilder.EntitySet<Donation>("Donations");
+            odataBuilder.EntitySet<Campaign>("Campaigns");
+
+            return odataBuilder.GetEdmModel();
+        }
+
     }
 }

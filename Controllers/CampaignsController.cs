@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HabitatCRM.Data;
 using HabitatCRM.Entities;
+using Microsoft.AspNet.OData;
 
 namespace HabitatCRM.Controllers
 {
@@ -21,16 +22,14 @@ namespace HabitatCRM.Controllers
             _context = context;
         }
 
-        // GET: api/Campaigns
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Campaign>>> GetCampaign()
+        [EnableQuery()]
+        public IQueryable GetCampaigns()
         {
-            return await _context.Campaign
-                .Select(c => new Campaign() { CampaignId = c.CampaignId, Name = c.Name})
-                .ToListAsync();
+            return _context.Campaign
+                .AsQueryable();
         }
 
-        // GET: api/Campaigns/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Campaign>> GetCampaign(Guid id)
         {
