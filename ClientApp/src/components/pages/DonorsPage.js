@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from "react-router-dom";
 import { Popconfirm, Table, Tag, Space, Button, message } from 'antd';
+import { Tabs } from 'antd';
 
 import {DonationsModal} from '../shared/DonationsModal'
 import { DonorsModal } from '../shared/DonorsModal';
@@ -9,6 +10,7 @@ import * as donorsService from '../services/DonorsService';
 import { getCampaigns, postCampaign } from '../services/CampaignsService';
 
 const { Column, ColumnGroup} = Table;
+const { TabPane } = Tabs;
 
 function DonorsTable(props) {
 
@@ -69,24 +71,27 @@ function DonorsTable(props) {
   );
 }
 
-export function DonorsPage() {
+export function DonorsPage(props) {
 
   let [loading, setLoading] = useState(false);
   let [dataSource, setDataSource] = useState(null);
   let [campaignsSource, setCampaignsSource] = useState(null);
-  
+  const defaultDonorToDisplay = "Business"
+
   useEffect(() => {
-      async function getDonorsAndCampaigns() {
-        setLoading(true);
-         
-        let [donorResponse, campaignsResponse] = await Promise.all([donorsService.getDonors(), getCampaigns()])
-        setLoading(false);
-        setDataSource(donorResponse);
-        setCampaignsSource(campaignsResponse);
+      async function setupPage() {
+        await getDonorsAndCampaigns(defaultDonorToDisplay);
       }
-      getDonorsAndCampaigns();
+      setupPage();
   }, []);
 
+  async function getDonorsAndCampaigns(donorType) {
+    setLoading(true);
+    let [donorResponse, campaignsResponse] = await Promise.all([donorsService.getDonors(donorType), getCampaigns()]);
+    setDataSource(donorResponse);
+    setCampaignsSource(campaignsResponse);
+    setLoading(false);
+  }
 
   const addCampaign = async (campaign) => {
 
@@ -122,13 +127,35 @@ export function DonorsPage() {
       message.error('Sorry, something went wrong... contact system administrator')
     }
   }
+
+  const selectTab = async (key) => {
+    await getDonorsAndCampaigns(key);
+  }
+
+  const DonorPane = ()=> (
+    <>
+      <DonorsModal addOrUpdate="Add" addDonor={addDonor} />
+      <CampaignModal addCampaign={addCampaign}/>
+      <DonorsTable dataSource={dataSource} 
+        loading={loading} 
+        deleteDonor={deleteDonor} 
+        updateDonor={updateDonor} 
+        campaigns={campaignsSource}/>
+    </>
+  );
+
     return (
       <>
         <div style={{ marginBottom: 16 }}>
-        <DonorsModal addOrUpdate="Add" addDonor={addDonor} />
-        <CampaignModal addCampaign={addCampaign}/>
+          <Tabs defaultActiveKey={defaultDonorToDisplay} onChange={selectTab}>
+            <TabPane tab="Business" key="business">
+              <DonorPane />
+            </TabPane>
+            <TabPane tab="Individual" key="individual">
+              <DonorPane />
+            </TabPane>
+          </Tabs>
         </div>
-        <DonorsTable dataSource={dataSource} loading={loading} deleteDonor={deleteDonor} updateDonor={updateDonor} campaigns={campaignsSource}/>
       </>
     );
 }
