@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from "react-router-dom";
-import { Popconfirm, Table, Tag, Space, Button, message } from 'antd';
+import { Popconfirm, Table, Tag, Space, Button, message, Spin } from 'antd';
 import { Tabs } from 'antd';
 
 import {DonationsModal} from '../shared/DonationsModal'
@@ -21,7 +21,7 @@ function DonorsTable(props) {
     }
 
     return (
-        <Table dataSource={props.dataSource} rowKey={r => r.donorId} loading={props.loading}>
+        <Table dataSource={props.dataSource} rowKey={r => r.donorId}>
           <Column title='Name' dataIndex='name' key='name' render={(_, record) =>
             (<Link 
               to={{ pathname:`profile/${record.donorId}`,
@@ -71,7 +71,7 @@ function DonorsTable(props) {
   );
 }
 
-export function DonorsPage(props) {
+export function DonorsPage() {
 
   let [loading, setLoading] = useState(false);
   let [dataSource, setDataSource] = useState(null);
@@ -135,18 +135,28 @@ export function DonorsPage(props) {
     await getDonorsAndCampaigns(key);
   }
 
-  const DonorPane = ()=> (
-    <>
-      <DonorsModal addOrUpdate="Add" addDonor={addDonor} donorType={donorTypeSource}/>
-      <CampaignModal addCampaign={addCampaign}/>
-      <DonorsTable dataSource={dataSource} 
-        loading={loading} 
-        deleteDonor={deleteDonor} 
-        updateDonor={updateDonor} 
-        donorType={donorTypeSource}
-        campaigns={campaignsSource}/>
-    </>
-  );
+  const DonorPane = ()=> {
+   
+      if (loading){
+        return (
+          <div class="center-container">
+          <Spin />
+        </div>
+        );
+      } else {
+        return (
+          <>
+          <DonorsModal addOrUpdate="Add" addDonor={addDonor} donorType={donorTypeSource}/>
+          <CampaignModal addCampaign={addCampaign}/>
+          <DonorsTable dataSource={dataSource} 
+            deleteDonor={deleteDonor} 
+            updateDonor={updateDonor} 
+            donorType={donorTypeSource}
+            campaigns={campaignsSource}/>
+        </>
+        );
+      }
+  };
 
     return (
       <>

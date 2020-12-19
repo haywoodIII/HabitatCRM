@@ -107,6 +107,7 @@ function AddressSelect() {
         >
         <Select 
           showSearch 
+          defaultValue="New York"
           style={{ width: 200 }}
           placeholder="Select State" 
           optionFilterProp="children"  
