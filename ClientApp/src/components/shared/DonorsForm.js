@@ -138,6 +138,8 @@ export function DonorsForm(props) {
 
   const onFinish = async donor => {
 
+    donor.type = props.donorType;
+    
     if (props.addOrUpdate == "Add") {
       try {
           await donorsService.postDonor(donor)
@@ -174,29 +176,19 @@ export function DonorsForm(props) {
       <Form.Item name='email' label="Email" rules={[{ type: 'email', required: true }]}>
           <Input />
       </Form.Item>
+      
+      {props.donorType === "Individual" &&
       <Form.Item name='age' label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
           <InputNumber  min={0}/>
       </Form.Item>
-      <AddressSelect/>
-      <GenderSelect/>
-      <Form.Item
-        name='type'
-        label="Donor Type:"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <Select
-          placeholder="Select..."
-          allowClear
-        >
-          <Option value="Individual">Individual</Option>
-          <Option value="Business">Business</Option>
-        </Select>
-      </Form.Item>
+      }
 
+      <AddressSelect/>
+
+      {props.donorType === "Individual" &&
+        <GenderSelect/>
+      }
+    
       <Form.Item
       name='phone'
       label="Phone Number"

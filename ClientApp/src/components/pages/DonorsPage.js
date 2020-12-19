@@ -52,7 +52,7 @@ function DonorsTable(props) {
 
             <DonationsModal initialValues={record} campaigns={props.campaigns}/>
 
-            <DonorsModal addOrUpdate="Update" initialValues={record} updateDonor={props.updateDonor}/>
+            <DonorsModal addOrUpdate="Update" initialValues={record} updateDonor={props.updateDonor} donorType={props.donorType}/>
             <Popconfirm
               title={`Are you sure delete ${record.name}?`}
               onConfirm={(e) => deleteDonor(record.donorId, e)}
@@ -76,7 +76,9 @@ export function DonorsPage(props) {
   let [loading, setLoading] = useState(false);
   let [dataSource, setDataSource] = useState(null);
   let [campaignsSource, setCampaignsSource] = useState(null);
+
   const defaultDonorToDisplay = "Business"
+  let [donorTypeSource, setDonorTypeSource] = useState("Business");
 
   useEffect(() => {
       async function setupPage() {
@@ -129,17 +131,19 @@ export function DonorsPage(props) {
   }
 
   const selectTab = async (key) => {
+    setDonorTypeSource(key);
     await getDonorsAndCampaigns(key);
   }
 
   const DonorPane = ()=> (
     <>
-      <DonorsModal addOrUpdate="Add" addDonor={addDonor} />
+      <DonorsModal addOrUpdate="Add" addDonor={addDonor} donorType={donorTypeSource}/>
       <CampaignModal addCampaign={addCampaign}/>
       <DonorsTable dataSource={dataSource} 
         loading={loading} 
         deleteDonor={deleteDonor} 
         updateDonor={updateDonor} 
+        donorType={donorTypeSource}
         campaigns={campaignsSource}/>
     </>
   );
@@ -148,10 +152,10 @@ export function DonorsPage(props) {
       <>
         <div style={{ marginBottom: 16 }}>
           <Tabs defaultActiveKey={defaultDonorToDisplay} onChange={selectTab}>
-            <TabPane tab="Business" key="business">
+            <TabPane tab="Business" key="Business">
               <DonorPane />
             </TabPane>
-            <TabPane tab="Individual" key="individual">
+            <TabPane tab="Individual" key="Individual">
               <DonorPane />
             </TabPane>
           </Tabs>
