@@ -94,6 +94,15 @@ namespace HabitatCRM
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            // Apply migrations in dev
+            if (env.IsDevelopment())
+            {
+                using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    scope.ServiceProvider.GetService<HabitatCRMContext>().Database.Migrate();
+                }
+            }
         }
 
         private IEdmModel GetEdmModel()

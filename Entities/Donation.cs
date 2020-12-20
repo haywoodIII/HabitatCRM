@@ -15,6 +15,7 @@ namespace HabitatCRM.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; }
         public Guid DonorId { get; set; }
+        public DateTime? Date { get; set; }
         public Donor Donor { get; set; }
 
         public Campaign Campaign { get; set; }

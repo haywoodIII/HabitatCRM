@@ -109,6 +109,7 @@ function DonorsTable(props) {
           <Column 
             title='Name' 
             dataIndex='name'
+            width={200}
             {...getColumnSearchProps(['name'])}
             key='name' render={(_, record) =>
               (<Link 
@@ -117,24 +118,27 @@ function DonorsTable(props) {
                   {record.name}
               </Link>)}>
           </Column>
-          <Column title='Email' dataIndex="email" ></Column>
+          <Column title='Email' dataIndex="email" width={250} ></Column>
           <ColumnGroup title="Address">
-            <Column title='Street' dataIndex={['address', 'street']} ></Column>
-            <Column title='City' dataIndex={['address', 'city']} {...getColumnSearchProps(['address', 'city'])}></Column>
-            <Column title='State' dataIndex={['address', 'state']} ></Column>
-            <Column title='Zip' dataIndex={['address', 'zip']} ></Column>
+            <Column title='Street' dataIndex={['address', 'street']} width={200}></Column>
+            <Column title='City' dataIndex={['address', 'city']} {...getColumnSearchProps(['address', 'city'])} width={150}></Column>
+            <Column title='State' dataIndex={['address', 'state']} width={75}></Column>
+            <Column title='Zip' dataIndex={['address', 'zip']} width={100}></Column>
           </ColumnGroup>
-          <Column 
+          {/* <Column 
           title='Donor Type' 
           dataIndex='type'
           key='type' 
+          width={100}
           render = {(type, color) => <Tag color={color = type === "Business" ? "blue": "green"} key={type}>{type?.toUpperCase()}</Tag>}
           >
-          </Column>
+          </Column> */}
    
         <Column 
         title='Action' 
-        key='action'
+        key='operation'
+        fixed='right'
+        width={100}
         render = {(_, record) => (
           <Space size="middle">
 
