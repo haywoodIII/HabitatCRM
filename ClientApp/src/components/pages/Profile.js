@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Descriptions, Timeline, Card, Row, Col, Rate, Typography, Statistic, Button, Tooltip } from 'antd';
-import { DollarCircleOutlined, StepBackwardOutlined } from '@ant-design/icons';
+import { DollarCircleOutlined, ArrowLeftOutlined} from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
 
 import {getDonorProfile} from '../services/ProfileService'
@@ -28,7 +28,7 @@ export function Profile(props) {
         <>
         <div style={{paddingBottom: 10}}>
             <Tooltip title="Go Back">
-                <Button type="text" icon={<StepBackwardOutlined />}  onClick={() =>history.push({
+                <Button type="text" icon={<ArrowLeftOutlined />}  onClick={() =>history.push({
                     pathname: "/donors",
                     state: { tab: props.location.state.donorType },
                         })}>

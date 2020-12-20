@@ -1,3 +1,7 @@
 ﻿#components-form-demo-control-hooks .ant-btn {
     margin-right: 8px;
   }
+
+  .ant-tabs.ant-tabs-top {
+    height: 550px;
+}

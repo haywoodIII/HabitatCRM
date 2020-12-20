@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from "react-router-dom";
-import { Popconfirm, Table, Tag, Space, Button, message, Spin } from 'antd';
+import { Popconfirm, Table, Tag, Space, Button, message, Spin, Pagination } from 'antd';
 import { Tabs } from 'antd';
 
 import {DonationsModal} from '../shared/DonationsModal'
@@ -21,7 +21,11 @@ function DonorsTable(props) {
     }
 
     return (
-        <Table dataSource={props.dataSource} rowKey={r => r.donorId}>
+        <Table 
+          dataSource={props.dataSource} 
+          rowKey={r => r.donorId}
+          pagination={{ defaultPageSize: 25, showSizeChanger: true, pageSizeOptions: ['25', '50', '100']}}
+          >
           <Column title='Name' dataIndex='name' key='name' render={(_, record) =>
             (<Link 
               to={{ pathname:`profile/${record.donorId}`,
