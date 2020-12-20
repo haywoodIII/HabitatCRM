@@ -78,7 +78,7 @@ export function DonorsPage(props) {
   let [campaignsSource, setCampaignsSource] = useState(null);
 
   // Pass tab history back from profile page to DonorsPage
-  const defaultDonorToDisplay = props.location.state.tab ?? "Business"
+  const defaultDonorToDisplay = props.location.state?.tab ?? "Business"
   let [donorTypeSource, setDonorTypeSource] = useState("Business");
 
   useEffect(() => {
