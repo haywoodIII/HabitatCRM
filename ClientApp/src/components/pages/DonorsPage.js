@@ -25,7 +25,7 @@ function DonorsTable(props) {
           <Column title='Name' dataIndex='name' key='name' render={(_, record) =>
             (<Link 
               to={{ pathname:`profile/${record.donorId}`,
-                    state: {donor: record}}}>
+                    state: {donor: record, donorType: props.donorType}}}>
                 {record.name}
             </Link>)}>
           </Column>
@@ -71,13 +71,14 @@ function DonorsTable(props) {
   );
 }
 
-export function DonorsPage() {
+export function DonorsPage(props) {
 
   let [loading, setLoading] = useState(false);
   let [dataSource, setDataSource] = useState(null);
   let [campaignsSource, setCampaignsSource] = useState(null);
 
-  const defaultDonorToDisplay = "Business"
+  // Pass tab history back from profile page to DonorsPage
+  const defaultDonorToDisplay = props.location.state.tab ?? "Business"
   let [donorTypeSource, setDonorTypeSource] = useState("Business");
 
   useEffect(() => {

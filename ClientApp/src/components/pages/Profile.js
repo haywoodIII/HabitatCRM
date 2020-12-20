@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import { Descriptions, Timeline, Card, Row, Col, Rate, Typography, Statistic } from 'antd';
-import { DollarCircleOutlined } from '@ant-design/icons';
+import { Descriptions, Timeline, Card, Row, Col, Rate, Typography, Statistic, Button, Tooltip } from 'antd';
+import { DollarCircleOutlined, StepBackwardOutlined } from '@ant-design/icons';
+import { useHistory } from "react-router-dom";
 
 import {getDonorProfile} from '../services/ProfileService'
 
 const { Title } = Typography;
 
-
 export function Profile(props) {
-
     const donor = props.location.state.donor;
     const address = donor?.address;
-    const fullAddress = `${address.street} ${address.city}, ${address.state} ${address.zip}`
+    const fullAddress = `${address.street} ${address.city}, ${address.state} ${address.zip}`;
 
     let [donorProfile, setDonorProfile] = useState(null);
+    const history = useHistory();
 
     useEffect(() => {
         async function getProfile() {
@@ -24,9 +24,17 @@ export function Profile(props) {
         getProfile();
     }, []);
 
-
     return (
         <>
+        <div style={{paddingBottom: 10}}>
+            <Tooltip title="Go Back">
+                <Button type="text" icon={<StepBackwardOutlined />}  onClick={() =>history.push({
+                    pathname: "/donors",
+                    state: { tab: props.location.state.donorType },
+                        })}>
+                </Button>
+            </Tooltip>
+        </div>
         <Descriptions title="User Info">
             <Descriptions.Item label="UserName">{donor?.name}</Descriptions.Item>
             <Descriptions.Item label="Telephone">{donor?.phone}</Descriptions.Item>
