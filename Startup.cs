@@ -16,6 +16,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.AspNet.OData.Builder;
 using HabitatCRM.Entities;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 namespace HabitatCRM
 {
@@ -37,6 +38,8 @@ namespace HabitatCRM
                  .AddNewtonsoftJson(options =>
                  options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                  .AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault);
+            services.AddLogging();
+            services.Configure<AzureFileLoggerOptions>(Configuration.GetSection("AzureLogging"));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
