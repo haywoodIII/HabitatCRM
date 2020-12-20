@@ -1,11 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import { Descriptions, Timeline, Card, Row, Col, Rate, Typography, Statistic, Button, Tooltip } from 'antd';
+import { 
+    Descriptions, 
+    Timeline, 
+    Card, 
+    Row, 
+    Col, 
+    Statistic, 
+    Button, 
+    Tooltip } from 'antd';
 import { DollarCircleOutlined, ArrowLeftOutlined} from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
 
 import {getDonorProfile} from '../services/ProfileService'
-
-const { Title } = Typography;
 
 export function Profile(props) {
     const donor = props.location.state.donor;
@@ -69,13 +75,13 @@ export function Profile(props) {
 function TimelineCard(props) {
     
     const timelineItem = props?.profile?.donationHistory.map((date) =>
-        <Timeline.Item>Donated on {new Date(date).toLocaleString("en-US")}</Timeline.Item>
+        <Timeline.Item>Donated on {new Date(date).toLocaleDateString("en-US")}</Timeline.Item>
     );
 
 
     return(
         <Card title="Donation History" bordered={false}>
-            {timelineItem}
+            {timelineItem ? timelineItem : "No Donations Entered"}
         </Card>
     );
 }

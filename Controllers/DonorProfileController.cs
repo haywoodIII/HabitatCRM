@@ -32,7 +32,7 @@ namespace HabitatCRM.Controllers
                               where d.DonorId == id
                               select new
                               {
-                                  DonationHistory = a.CreatedDate,
+                                  DonationHistory = a.Date,
                                   DonorCreationDate = d.CreatedDate,
                                   DonationSum = d.Donations.Select(s => s.Amount).Sum(),
                                   DonationTotal = d.Donations.Select(s => s).Count()

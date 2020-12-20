@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { Form, 
     InputNumber, 
+    DatePicker,
     Button,
     message,
     Select } from 'antd';
@@ -72,6 +73,10 @@ export function DonationsForm(props){
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
             />
+        </Form.Item>
+
+        <Form.Item label="Date:" name='date' required={true}>
+            <DatePicker />
         </Form.Item>
 
         <Form.Item label="Campaign:" name='campaignId'>
