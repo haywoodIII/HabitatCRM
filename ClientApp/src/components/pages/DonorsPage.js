@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from "react-router-dom";
-import { Popconfirm, Table, Tag, Space, Button, message, Spin, Pagination } from 'antd';
-import { Tabs } from 'antd';
+import { Popconfirm, Table, Tag, Space, Button, message, Spin, Pagination, Tabs, Input  } from 'antd';
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 
 import {DonationsModal} from '../shared/DonationsModal'
 import { DonorsModal } from '../shared/DonorsModal';
@@ -14,11 +15,90 @@ const { TabPane } = Tabs;
 
 function DonorsTable(props) {
 
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchColumn] = useState(null);
+
+  let searchInput = null; 
 
   const deleteDonor = async (donorId, e) => {
     e.preventDefault();
     props.deleteDonor(donorId);
     }
+
+    const getColumnSearchProps = dataIndex => ({
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={node => {
+              searchInput = node;
+            }}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Search
+            </Button>
+            <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+              Reset
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+      onFilter: (value, record) => {
+        
+        const navigatedRecord = () => {
+          let navigatedObj;
+          for (const el of dataIndex) {
+            navigatedObj = navigatedObj ? navigatedObj[el] : record[el];
+          }
+          return navigatedObj
+        }
+
+        const filter = navigatedRecord() 
+        ? navigatedRecord().toString().toLowerCase().includes(value.toLowerCase())
+        : ''
+        return filter;
+      },
+
+      onFilterDropdownVisibleChange: visible => {
+        if (visible) {
+          setTimeout(() => searchInput.select(), 100);
+        }
+      },
+      render: text =>
+        JSON.stringify(searchedColumn) ===  JSON.stringify(dataIndex) ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        ) : (
+          text
+        ),
+    });
+
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+      confirm();
+      setSearchText(selectedKeys[0]);
+      setSearchColumn(dataIndex)
+    };
+  
+    const handleReset = clearFilters => {
+      clearFilters();
+      setSearchText('');
+    };
 
     return (
         <Table 
@@ -26,17 +106,21 @@ function DonorsTable(props) {
           rowKey={r => r.donorId}
           pagination={{ defaultPageSize: 25, showSizeChanger: true, pageSizeOptions: ['25', '50', '100']}}
           >
-          <Column title='Name' dataIndex='name' key='name' render={(_, record) =>
-            (<Link 
-              to={{ pathname:`profile/${record.donorId}`,
-                    state: {donor: record, donorType: props.donorType}}}>
-                {record.name}
-            </Link>)}>
+          <Column 
+            title='Name' 
+            dataIndex='name'
+            {...getColumnSearchProps(['name'])}
+            key='name' render={(_, record) =>
+              (<Link 
+                to={{ pathname:`profile/${record.donorId}`,
+                      state: {donor: record, donorType: props.donorType}}}>
+                  {record.name}
+              </Link>)}>
           </Column>
           <Column title='Email' dataIndex="email" ></Column>
           <ColumnGroup title="Address">
             <Column title='Street' dataIndex={['address', 'street']} ></Column>
-            <Column title='City' dataIndex={['address', 'city']} ></Column>
+            <Column title='City' dataIndex={['address', 'city']} {...getColumnSearchProps(['address', 'city'])}></Column>
             <Column title='State' dataIndex={['address', 'state']} ></Column>
             <Column title='Zip' dataIndex={['address', 'zip']} ></Column>
           </ColumnGroup>
