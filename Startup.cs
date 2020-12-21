@@ -115,6 +115,7 @@ namespace HabitatCRM
             odataBuilder.EntitySet<Donation>("Donations");
             odataBuilder.EntitySet<Campaign>("Campaigns");
             odataBuilder.EntitySet<Note>("Notes");
+            odataBuilder.EntitySet<DonorContact>("DonorContacts");
 
             return odataBuilder.GetEdmModel();
         }

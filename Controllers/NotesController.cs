@@ -31,7 +31,6 @@ namespace HabitatCRM.Controllers
                 .AsQueryable();
         }
 
-        // GET: api/Notes/5
         [ODataRoute("{id}")]
 
         public async Task<ActionResult<Note>> Get([FromODataUri] Guid key)
@@ -48,7 +47,7 @@ namespace HabitatCRM.Controllers
 
         // PUT: api/Notes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{key}")]
         public async Task<IActionResult> PutNote(Guid id, Note note)
         {
             if (id != note.NoteId)

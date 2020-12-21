@@ -27,11 +27,13 @@ export function Profile(props) {
 
     const[donorProfile, setDonorProfile] = useState(null);
     const [donorNote, setDonorNote] = useState(null);
+    const [loaded, setLoaded] = useState(false);
     const history = useHistory();
   
     useEffect(() => {
         async function getPageLoadData() {
             let [profile, note] = await Promise.allSettled([getDonorProfile(donor.donorId), notesService.getNote(donor.donorId)]);
+            setLoaded(true);
             setDonorNote(note.value);  
             setDonorProfile(profile.value);
         }
@@ -84,14 +86,14 @@ export function Profile(props) {
         <div className="site-card-wrapper">
             <Row gutter={16} style={{marginTop: 100}}>
                 <Col span={8}>
-                {donorProfile 
+                {loaded 
                 ? <TimelineCard profile={donorProfile}></TimelineCard>
                 : <Spin/>
                 } 
                 </Col>
 
                 <Col span={8}>
-                {donorProfile
+                {loaded
                 ? <StatsCard donorProfile={donorProfile}/>
                 : <Spin/>
                 }

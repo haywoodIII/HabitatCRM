@@ -4,14 +4,16 @@ using HabitatCRM.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HabitatCRM.Migrations
 {
     [DbContext(typeof(HabitatCRMContext))]
-    partial class HabitatCRMContextModelSnapshot : ModelSnapshot
+    [Migration("20201221191632_Add-DonorContact-Entity")]
+    partial class AddDonorContactEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +35,7 @@ namespace HabitatCRM.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<Guid?>("DonorContactId")
+                    b.Property<Guid>("DonorContactId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("DonorId")
@@ -56,8 +58,7 @@ namespace HabitatCRM.Migrations
                     b.HasKey("AddressId");
 
                     b.HasIndex("DonorContactId")
-                        .IsUnique()
-                        .HasFilter("[DonorContactId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("DonorId")
                         .IsUnique();
@@ -292,7 +293,9 @@ namespace HabitatCRM.Migrations
                 {
                     b.HasOne("HabitatCRM.Entities.DonorContact", "DonorContact")
                         .WithOne("Address")
-                        .HasForeignKey("HabitatCRM.Entities.Address", "DonorContactId");
+                        .HasForeignKey("HabitatCRM.Entities.Address", "DonorContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HabitatCRM.Entities.Donor", "Donor")
                         .WithOne("Address")

@@ -101,13 +101,13 @@ function AddressSelect() {
         </Form.Item>
 
         <Form.Item
+          initialValue="New York"
           name={['address', 'state']}
           noStyle
           rules={[{ required: true, message: 'State is required' }]}
         >
         <Select 
           showSearch 
-          defaultValue="New York"
           style={{ width: 200 }}
           placeholder="Select State" 
           optionFilterProp="children"  

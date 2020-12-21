@@ -22,9 +22,10 @@ namespace HabitatCRM.Entities
 
 
         public Guid DonorId { get; set; }
-
         public Donor Donor { get; set; }
 
+        public Guid? DonorContactId { get; set; }
+        public DonorContact DonorContact { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime? CreatedDate { get; set; }

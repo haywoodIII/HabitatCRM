@@ -124,6 +124,8 @@ namespace HabitatCRM.Data
 
         public DbSet<HabitatCRM.Entities.Note> Note { get; set; }
 
+        public DbSet<HabitatCRM.Entities.DonorContact> DonorContact { get; set; }
+
     }
 
 }

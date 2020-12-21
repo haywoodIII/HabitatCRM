@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace HabitatCRM.Entities
 {
-    public class Donor
+    public class DonorContact
     {
         [Key]
-        public Guid DonorId { get; set; }
+        public Guid DonorContactId { get; set; }
 
-        public Guid UserId { get; set; }
+        public string Tags { get; set; }
 
         public string Name { get; set; }
 
@@ -22,26 +22,12 @@ namespace HabitatCRM.Entities
 
         public string Email { get; set; }
 
-        public string Type { get; set; }
-
-        public string Gender { get; set; }
-
-        public string GenderOther { get; set; }
-
-
-        public List<Donation> Donations { get; set; }
-        public List<DonorContact> DonorContacts { get; set; }
         public Address Address { get; set; }
-        public Organization Organization { get; set; }
-        public Guid OrganizationId { get; set; }
-        public Note Note { get; set; }
-
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime? CreatedDate { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? ModifiedDate { get; set; }
-
     }
 }
