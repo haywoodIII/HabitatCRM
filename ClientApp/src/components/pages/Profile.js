@@ -40,12 +40,14 @@ export function Profile(props) {
 
     const createOrUpdateNote = async text => {
  
-        if (!donorNote?.text && text) {
+        const newNote = !donorNote?.text && text;
+        const existingNote = donorNote?.text;
+        if (newNote) {
             const newNote = { text: text, donorId: donor.donorId };
             const r = await notesService.addNote(newNote)
             setDonorNote({...newNote, noteId: r.noteId});
         }
-        else {
+        else if (existingNote) {
             const updatedNote = { text: text, noteId: donorNote.noteId };
             await notesService.updateNote(updatedNote);
             setDonorNote(updatedNote);
