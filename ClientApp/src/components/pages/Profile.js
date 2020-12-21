@@ -7,28 +7,50 @@ import {
     Col, 
     Statistic, 
     Button, 
-    Tooltip } from 'antd';
+    Tooltip,
+    Input,
+    Typography } from 'antd';
+
 import { DollarCircleOutlined, ArrowLeftOutlined} from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
-
 import {getDonorProfile} from '../services/ProfileService'
+import * as notesService from '../services/NotesService'
+
+const { TextArea } = Input;
+const { Title, Paragraph } = Typography;
 
 export function Profile(props) {
     const donor = props.location.state.donor;
     const address = donor?.address;
     const fullAddress = `${address.street} ${address.city}, ${address.state} ${address.zip}`;
 
-    let [donorProfile, setDonorProfile] = useState(null);
+    const[donorProfile, setDonorProfile] = useState(null);
+
+    const [donorNote, setDonorNote] = useState(null);
     const history = useHistory();
-
+  
     useEffect(() => {
-        async function getProfile() {
-
-          let profile = await getDonorProfile(donor.donorId);
-          setDonorProfile(profile);
+        async function getPageLoadData() {
+            let [profile, note] = await Promise.allSettled([getDonorProfile(donor.donorId), notesService.getNote(donor.donorId)]);
+            setDonorNote(note.value);  
+            setDonorProfile(profile.value);
         }
-        getProfile();
+        getPageLoadData();
     }, []);
+
+    const createOrUpdateNote = async text => {
+ 
+        if (!donorNote?.text && text) {
+            const newNote = { text: text, donorId: donor.donorId };
+            const r = await notesService.addNote(newNote)
+            setDonorNote({...newNote, noteId: r.noteId});
+        }
+        else {
+            const updatedNote = { text: text, noteId: donorNote.noteId };
+            await notesService.updateNote(updatedNote);
+            setDonorNote(updatedNote);
+        }
+    };
 
     return (
         <>
@@ -52,7 +74,7 @@ export function Profile(props) {
         <div className="site-card-wrapper">
             <Row gutter={16} style={{marginTop: 100}}>
                 <Col span={8}>
-                <TimelineCard profile={donorProfile}></TimelineCard>
+                    <TimelineCard profile={donorProfile}></TimelineCard>
                 </Col>
                 <Col span={8}>
                     <Card title="Stats" bordered={false}>
@@ -68,16 +90,27 @@ export function Profile(props) {
                 </Col>
             </Row>
         </div>
+
+        <Row gutter={16} style={{marginTop: 100}}>
+            <Col span={8}>
+                <Card title="Notes" bordered={false}>
+                    <Paragraph maxLength={8000} editable={{ onChange: createOrUpdateNote }}>{donorNote?.text}</Paragraph>    
+                </Card>
+            </Col>
+
+            <Col span={8}>
+
+            </Col>
+        </Row>
         </>
     );
 }
 
 function TimelineCard(props) {
     
-    const timelineItem = props?.profile?.donationHistory.map((date) =>
-        <Timeline.Item>Donated on {new Date(date).toLocaleDateString("en-US")}</Timeline.Item>
+    const timelineItem = props?.profile?.donationHistory?.map((date) =>
+        <Timeline.Item key={date}>Donated on {new Date(date).toLocaleDateString("en-US")}</Timeline.Item>
     );
-
 
     return(
         <Card title="Donation History" bordered={false}>

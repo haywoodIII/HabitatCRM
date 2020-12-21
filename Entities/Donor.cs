@@ -33,6 +33,7 @@ namespace HabitatCRM.Entities
         public Address Address { get; set; }
         public Organization Organization { get; set; }
         public Guid OrganizationId { get; set; }
+        public Note Note { get; set; }
 
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
