@@ -9,7 +9,8 @@ import {
     Button, 
     Tooltip,
     Input,
-    Typography } from 'antd';
+    Typography,
+    Spin } from 'antd';
 
 import { DollarCircleOutlined, ArrowLeftOutlined} from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
@@ -25,7 +26,6 @@ export function Profile(props) {
     const fullAddress = `${address.street} ${address.city}, ${address.state} ${address.zip}`;
 
     const[donorProfile, setDonorProfile] = useState(null);
-
     const [donorNote, setDonorNote] = useState(null);
     const history = useHistory();
   
@@ -43,7 +43,7 @@ export function Profile(props) {
         const newNote = !donorNote?.text ?? text;
         const existingNote = donorNote?.text;
         const deletedNote = existingNote && !text;
-        
+
         if (newNote) {
             const newNote = { text: text, donorId: donor.donorId };
             const r = await notesService.addNote(newNote)
@@ -80,26 +80,26 @@ export function Profile(props) {
             <Descriptions.Item label="Address">{fullAddress}</Descriptions.Item>
             <Descriptions.Item label="Email">{donor?.email}</Descriptions.Item>
         </Descriptions>
-
+        
         <div className="site-card-wrapper">
             <Row gutter={16} style={{marginTop: 100}}>
                 <Col span={8}>
-                    <TimelineCard profile={donorProfile}></TimelineCard>
+                {donorProfile 
+                ? <TimelineCard profile={donorProfile}></TimelineCard>
+                : <Spin/>
+                } 
                 </Col>
+
                 <Col span={8}>
-                    <Card title="Stats" bordered={false}>
-                        <Statistic title="Total Donations:" value={donorProfile?.totalDonations} />
-                        <Statistic
-                            title="Total Amount:"
-                            value={donorProfile?.totalAmountDonated}
-                            precision={2}
-                            valueStyle={{ color: '#3f8600' }}
-                            prefix={<DollarCircleOutlined style={{verticalAlign: "baseline"}}/>}
-                        />
-                    </Card>
+                {donorProfile
+                ? <StatsCard donorProfile={donorProfile}/>
+                : <Spin/>
+                }
                 </Col>
             </Row>
         </div>
+        
+        
 
         <Row gutter={16} style={{marginTop: 100}}>
             <Col span={8}>
@@ -114,6 +114,21 @@ export function Profile(props) {
         </Row>
         </>
     );
+}
+
+function StatsCard(props) {
+    return(
+    <Card title="Stats" bordered={false}>
+        <Statistic title="Total Donations:" value={props.donorProfile?.totalDonations} />
+        <Statistic
+            title="Total Amount:"
+            value={props.donorProfile?.totalAmountDonated}
+            precision={2}
+            valueStyle={{ color: '#3f8600' }}
+            prefix={<DollarCircleOutlined style={{verticalAlign: "baseline"}}/>}
+        />
+    </Card>
+    )
 }
 
 function TimelineCard(props) {
