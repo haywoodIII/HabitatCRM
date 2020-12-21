@@ -54,3 +54,19 @@ export async function updateNote(note = {}) {
 
     return response.value;
 }
+
+export async function deleteNote(noteId) {
+    const jwt = await auth.getJwtSilent();
+
+    const response = await fetch(baseUrl + "/" + noteId, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${jwt.accessToken}`,
+          }, 
+    });
+
+    if(!response.ok) {
+        throw new Error('Something went wrong.');
+    } 
+
+}

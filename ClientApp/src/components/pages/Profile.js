@@ -38,20 +38,28 @@ export function Profile(props) {
         getPageLoadData();
     }, []);
 
-    const createOrUpdateNote = async text => {
+    const createOrUpdateOrDeleteNotes = async text => {
  
-        const newNote = !donorNote?.text && text;
+        const newNote = !donorNote?.text ?? text;
         const existingNote = donorNote?.text;
+        const deletedNote = existingNote && !text;
+        
         if (newNote) {
             const newNote = { text: text, donorId: donor.donorId };
             const r = await notesService.addNote(newNote)
             setDonorNote({...newNote, noteId: r.noteId});
         }
-        else if (existingNote) {
-            const updatedNote = { text: text, noteId: donorNote.noteId };
-            await notesService.updateNote(updatedNote);
-            setDonorNote(updatedNote);
+        else if (deletedNote) {
+            const deletedNote = null;
+            await notesService.deleteNote(donorNote.noteId)
+            .then(setDonorNote(deletedNote))
         }
+        else {
+            const updatedNote = { text: text, noteId: donorNote.noteId };
+            await notesService.updateNote(updatedNote)
+            .then(setDonorNote(updatedNote));
+        }
+
     };
 
     return (
@@ -96,7 +104,7 @@ export function Profile(props) {
         <Row gutter={16} style={{marginTop: 100}}>
             <Col span={8}>
                 <Card title="Notes" bordered={false}>
-                    <Paragraph maxLength={8000} editable={{ onChange: createOrUpdateNote }}>{donorNote?.text}</Paragraph>    
+                    <Paragraph maxLength={8000} editable={{ onChange: createOrUpdateOrDeleteNotes }}>{donorNote?.text}</Paragraph>    
                 </Card>
             </Col>
 
