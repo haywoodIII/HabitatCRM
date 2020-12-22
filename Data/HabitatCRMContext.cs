@@ -72,6 +72,15 @@ namespace HabitatCRM.Data
                 .Property(b => b.ModifiedDate)
                 .HasDefaultValueSql("getdate()");
 
+            modelBuilder.Entity<DonorContact>()
+                .Property(b => b.CreatedDate)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<DonorContact>()
+                .Property(b => b.ModifiedDate)
+                .HasDefaultValueSql("getdate()");
+
+
             /*    modelBuilder.Entity<Donor>().HasData(new Donor 
                 { 
                     DonorId = Guid.Parse("BA730422-6462-43B5-A817-BCC6CEC3BA50"),

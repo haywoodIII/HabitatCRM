@@ -19,7 +19,7 @@ export async function getContacts(donorId) {
 
 export async function addContact(contact = {}) {
     const jwt = await auth.getJwtSilent();
-    contact.contactId = helpers.uuidv4();
+    contact.donorContactId = helpers.uuidv4();
 
     const response =  await fetch(baseUrl, {
         method: 'POST',

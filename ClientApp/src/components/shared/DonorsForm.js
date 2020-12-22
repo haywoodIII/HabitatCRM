@@ -74,7 +74,7 @@ function GenderSelect() {
   );
 }
 
-function AddressSelect() {
+export function AddressSelect() {
   const statesSelect = states.map((states) => 
   <Option key={states.short} value={states.short}>{states.name}</Option>
 );
@@ -141,7 +141,7 @@ export function DonorsForm(props) {
 
     donor.type = props.donorType;
     
-    if (props.addOrUpdate == "Add") {
+    if (props.addOrUpdate === "Add") {
       try {
           await donorsService.postDonor(donor)
           .then(form.resetFields());
@@ -151,7 +151,7 @@ export function DonorsForm(props) {
           message.error('Sorry, something went wrong... contact system administrator');
         }
 
-    } else if (props.addOrUpdate == "Update") {
+    } else if (props.addOrUpdate === "Update") {
 
       try {
             const updatedDonor = await donorsService.updateDonor(donor)

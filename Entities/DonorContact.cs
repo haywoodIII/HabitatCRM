@@ -22,7 +22,16 @@ namespace HabitatCRM.Entities
 
         public string Email { get; set; }
 
-        public Address Address { get; set; }
+        public string Street { get; set; }
+
+        public string City { get; set; }
+
+        public string State { get; set; }
+
+        public string Zip { get; set; }
+
+        public Guid? DonorId { get; set; }
+        public Donor Donor { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime? CreatedDate { get; set; }

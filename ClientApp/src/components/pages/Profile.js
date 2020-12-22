@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { useHistory } from "react-router-dom";
 import { 
     Descriptions, 
     Timeline, 
@@ -10,15 +11,19 @@ import {
     Tooltip,
     Input,
     Typography,
-    Spin } from 'antd';
+    Spin, 
+    List,
+    message } from 'antd';
 
 import { DollarCircleOutlined, ArrowLeftOutlined} from '@ant-design/icons';
-import { useHistory } from "react-router-dom";
-import {getDonorProfile} from '../services/ProfileService'
+
+import {DonorsContactDrawer} from '../shared/DonorsContactDrawer'
+import { getDonorProfile } from '../services/ProfileService'
 import * as notesService from '../services/NotesService'
+import * as contactsService from '../services/DonorContactsService'
 
 const { TextArea } = Input;
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 export function Profile(props) {
     const donor = props.location.state.donor;
@@ -27,15 +32,21 @@ export function Profile(props) {
 
     const[donorProfile, setDonorProfile] = useState(null);
     const [donorNote, setDonorNote] = useState(null);
+    const [contacts, setContacts] = useState([]);
     const [loaded, setLoaded] = useState(false);
     const history = useHistory();
   
     useEffect(() => {
         async function getPageLoadData() {
-            let [profile, note] = await Promise.allSettled([getDonorProfile(donor.donorId), notesService.getNote(donor.donorId)]);
+            let [profile, note, contacts] = await Promise.allSettled([
+                getDonorProfile(donor.donorId), 
+                notesService.getNote(donor.donorId),
+                contactsService.getContacts(donor.donorId)
+            ]);
             setLoaded(true);
             setDonorNote(note.value);  
             setDonorProfile(profile.value);
+            setContacts(contacts.value);
         }
         getPageLoadData();
     }, []);
@@ -56,13 +67,24 @@ export function Profile(props) {
             await notesService.deleteNote(donorNote.noteId)
             .then(setDonorNote(deletedNote))
         }
-        else {
+        else { // Updated Note
             const updatedNote = { text: text, noteId: donorNote.noteId };
             await notesService.updateNote(updatedNote)
             .then(setDonorNote(updatedNote));
         }
 
     };
+
+    const addDonorContact = async contact => {
+        try {
+            contact.donorId = donor.donorId;
+            await contactsService.addContact(contact);
+            setContacts([...contacts, contact]);
+            message.success(`Welcome ${contact.name}`);
+        } catch (error) {
+            message.error('Sorry, something went wrong... contact system administrator')
+        }
+    }
 
     return (
         <>
@@ -98,6 +120,15 @@ export function Profile(props) {
                 : <Spin/>
                 }
                 </Col>
+
+                <Col>
+                {loaded
+                ? <DonorsContactCard addDonorContact={addDonorContact} contacts={contacts}/>
+                : <Spin/>
+                }
+                    
+                </Col>
+
             </Row>
         </div>
         
@@ -118,8 +149,32 @@ export function Profile(props) {
     );
 }
 
+function DonorsContactCard(props) {
+
+    return (
+        <>
+        <Card title="Contacts" bordered={false}>
+               <DonorsContactDrawer addDonorContact={props.addDonorContact}/>
+        </Card>
+        <List
+        itemLayout="horizontal"
+        dataSource={props.contacts}
+        renderItem={contact => (
+            <List.Item>
+            <List.Item.Meta
+                title={<a href="https://ant.design">{`${contact.name} ${contact.age ?? ''}`}</a>}
+                description={`Lives at ${contact.street}, ${contact.city}, ${contact.state} ${contact.zip}`}
+            />
+            { contact.tags && contact.tags }
+            </List.Item>
+        )}
+        />
+        </>
+    )
+}
+
 function StatsCard(props) {
-    return(
+    return (
     <Card title="Stats" bordered={false}>
         <Statistic title="Total Donations:" value={props.donorProfile?.totalDonations} />
         <Statistic
@@ -139,7 +194,7 @@ function TimelineCard(props) {
         <Timeline.Item key={date}>Donated on {new Date(date).toLocaleDateString("en-US")}</Timeline.Item>
     );
 
-    return(
+    return (
         <Card title="Donation History" bordered={false}>
             {timelineItem ? timelineItem : "No Donations Entered"}
         </Card>
