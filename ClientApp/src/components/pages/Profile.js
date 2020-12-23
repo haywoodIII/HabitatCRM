@@ -80,11 +80,37 @@ export function Profile(props) {
             contact.donorId = donor.donorId;
             await contactsService.addContact(contact);
             setContacts([...contacts, contact]);
-            message.success(`Welcome ${contact.name}`);
+            message.success(`Success`);
         } catch (error) {
             message.error('Sorry, something went wrong... contact system administrator')
         }
     }
+
+    const deleteContact = async donorContactId => {
+        try {
+            await contactsService.deleteContact(donorContactId);
+            setContacts(contacts.filter(c => c.donorContactId !== donorContactId));
+        } catch (error) {
+            message.error('Sorry, something went wrong... contact system administrator')
+        }
+    }
+
+    const updateContact = async contact => {
+        try {
+            await contactsService.updateContact(contact);
+
+            var updatedData = contacts.map(e => {
+                if (e.donorContactId === contact.donorContactId)
+                   return Object.assign({}, contact, {valid:true})
+                return e
+            });
+            message.success(`Success`);
+            setContacts(updatedData);
+        } catch (error) {
+            message.error('Sorry, something went wrong... contact system administrator')
+        }
+    }
+
 
     return (
         <>
@@ -123,7 +149,14 @@ export function Profile(props) {
 
                 <Col>
                 {loaded
-                ? <DonorsContactCard addDonorContact={addDonorContact} contacts={contacts}/>
+                ? <>
+                    <DonorsContactCard 
+                    addDonorContact={addDonorContact} 
+                    contacts={contacts}
+                    deleteContact={deleteContact}
+                    updateContact={updateContact}
+                    />
+                </>
                 : <Spin/>
                 }
                     
@@ -131,7 +164,6 @@ export function Profile(props) {
 
             </Row>
         </div>
-        
         
 
         <Row gutter={16} style={{marginTop: 100}}>
@@ -152,12 +184,10 @@ export function Profile(props) {
 function DonorsContactCard(props) {
 
     return (
-        <>
         <Card title="Contacts" bordered={false}>
-               <DonorsContactDrawer addDonorContact={props.addDonorContact}/>
-        </Card>
+            <DonorsContactDrawer 
+            addDonorContact={props.addDonorContact} editMode={false}/>
         <List
-        itemLayout="horizontal"
         dataSource={props.contacts}
         renderItem={contact => (
             <List.Item>
@@ -165,11 +195,17 @@ function DonorsContactCard(props) {
                 title={<a href="https://ant.design">{`${contact.name} ${contact.age ?? ''}`}</a>}
                 description={`Lives at ${contact.street}, ${contact.city}, ${contact.state} ${contact.zip}`}
             />
-            { contact.tags && contact.tags }
-            </List.Item>
+            {""}
+            <DonorsContactDrawer 
+                    updateContact={props.updateContact}
+                    deleteContact={props.deleteContact}
+                    initialValues={contact}
+                    editMode={true}
+            />
+            </List.Item>  
         )}
         />
-        </>
+        </Card>
     )
 }
 

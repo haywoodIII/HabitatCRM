@@ -47,7 +47,7 @@ namespace HabitatCRM.Controllers
 
         [ODataRoute("({key})")]
         [HttpPatch]
-        public async Task<IActionResult> PatchNote([FromODataUri] Guid key, [FromBody] Delta<DonorContact> donorContact)
+        public async Task<IActionResult> PatchDonorContact([FromODataUri] Guid key, [FromBody] Delta<DonorContact> donorContact)
         {
             if (!ModelState.IsValid)
             {

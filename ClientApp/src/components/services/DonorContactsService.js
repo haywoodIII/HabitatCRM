@@ -38,8 +38,7 @@ export async function addContact(contact = {}) {
 
 export async function updateContact(contact = {}) {
     const jwt = await auth.getJwtSilent();
-
-    const response = await fetch(`${baseUrl}(${contact.contactId})`, {
+    const response = await fetch(`${baseUrl}(${contact.donorContactId})`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${jwt.accessToken}`,
