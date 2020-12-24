@@ -36,6 +36,7 @@ export function DonorsContactDrawer(props) {
   const drawer = (
       <Drawer
         title="Contacts"
+        placement="left"
         width={720}
         onClose={closeDrawer}
         visible={drawerVisible}
@@ -147,7 +148,7 @@ function DonorsContactForm(props) {
       </Row>
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item name='email' label="Email" rules={[{ type: 'email', required: true }]}>
+          <Form.Item name='email' label="Email" rules={[{ type: 'email', required: false}]}>
             <Input placeholder="Enter email"/>
           </Form.Item>
         </Col>

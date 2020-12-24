@@ -111,7 +111,37 @@ export function Profile(props) {
         }
     }
 
+    const cards =  
+    <>
+        <div className="site-card-wrapper">
+            <Row gutter={16} style={{marginTop: 100}}>
+                <Col span={8}>
+                    <TimelineCard profile={donorProfile}></TimelineCard>
+                </Col>
+                <Col span={8}>
+                    <StatsCard donorProfile={donorProfile}/>
+                </Col>
+                <Col>
+                    <Card title="Notes" bordered={false}>
+                        <Paragraph maxLength={8000} editable={{ onChange: createOrUpdateOrDeleteNotes }}>{donorNote?.text}</Paragraph>    
+                    </Card>  
+                </Col>
+            </Row>
+        </div>
 
+        <Row gutter={16} style={{marginTop: 100}}>
+            <Col span={8}>
+            <DonorsContactCard 
+                    addDonorContact={addDonorContact} 
+                    contacts={contacts}
+                    deleteContact={deleteContact}
+                    updateContact={updateContact}
+                    />
+            </Col>
+            <Col span={8}>
+            </Col>
+        </Row>
+    </>
     return (
         <>
         <div style={{paddingBottom: 10}}>
@@ -131,52 +161,13 @@ export function Profile(props) {
             <Descriptions.Item label="Email">{donor?.email}</Descriptions.Item>
         </Descriptions>
         
-        <div className="site-card-wrapper">
-            <Row gutter={16} style={{marginTop: 100}}>
-                <Col span={8}>
-                {loaded 
-                ? <TimelineCard profile={donorProfile}></TimelineCard>
-                : <Spin/>
-                } 
-                </Col>
-
-                <Col span={8}>
-                {loaded
-                ? <StatsCard donorProfile={donorProfile}/>
-                : <Spin/>
-                }
-                </Col>
-
-                <Col>
-                {loaded
-                ? <>
-                    <DonorsContactCard 
-                    addDonorContact={addDonorContact} 
-                    contacts={contacts}
-                    deleteContact={deleteContact}
-                    updateContact={updateContact}
-                    />
-                </>
-                : <Spin/>
-                }
-                    
-                </Col>
-
-            </Row>
+        {loaded 
+        ? cards
+        : 
+        <div className="center-container">
+            <Spin/>
         </div>
-        
-
-        <Row gutter={16} style={{marginTop: 100}}>
-            <Col span={8}>
-                <Card title="Notes" bordered={false}>
-                    <Paragraph maxLength={8000} editable={{ onChange: createOrUpdateOrDeleteNotes }}>{donorNote?.text}</Paragraph>    
-                </Card>
-            </Col>
-
-            <Col span={8}>
-
-            </Col>
-        </Row>
+        }
         </>
     );
 }
@@ -192,10 +183,12 @@ function DonorsContactCard(props) {
         renderItem={contact => (
             <List.Item>
             <List.Item.Meta
-                title={<a href="https://ant.design">{`${contact.name} ${contact.age ?? ''}`}</a>}
+                title={<a href="https://ant.design">{`${contact.name}`}</a>}
                 description={`Lives at ${contact.street}, ${contact.city}, ${contact.state} ${contact.zip}`}
             />
             {""}
+            <Text type="secondary">{`${contact.tags}, ${contact.age ?? ''} ${contact.email ?? ''}`}</Text>
+            <br/>
             <DonorsContactDrawer 
                     updateContact={props.updateContact}
                     deleteContact={props.deleteContact}
