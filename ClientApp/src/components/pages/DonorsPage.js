@@ -114,7 +114,7 @@ function DonorsTable(props) {
             key='name' render={(_, record) =>
               (<Link 
                 to={{ pathname:`profile/${record.donorId}`,
-                      state: {donor: record, donorType: props.donorType}}}>
+                      state: {donor: record, donorType: props.donorType, campaigns: props.campaigns}}}>
                   {record.name}
               </Link>)}>
           </Column>
@@ -125,15 +125,6 @@ function DonorsTable(props) {
             <Column title='State' dataIndex={['address', 'state']} width={75}></Column>
             <Column title='Zip' dataIndex={['address', 'zip']} width={100}></Column>
           </ColumnGroup>
-          {/* <Column 
-          title='Donor Type' 
-          dataIndex='type'
-          key='type' 
-          width={100}
-          render = {(type, color) => <Tag color={color = type === "Business" ? "blue": "green"} key={type}>{type?.toUpperCase()}</Tag>}
-          >
-          </Column> */}
-   
         <Column 
         title='Action' 
         key='operation'
@@ -233,7 +224,7 @@ export function DonorsPage(props) {
    
       if (loading){
         return (
-          <div class="center-container">
+          <div className="center-container">
           <Spin />
         </div>
         );
