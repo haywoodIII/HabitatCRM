@@ -9,8 +9,7 @@ import {
   Input, 
   Select, 
   InputNumber, 
-  Popconfirm,
-  Modal } from 'antd';
+  Popconfirm } from 'antd';
 
 import {states} from '../data/geo';
 
@@ -76,7 +75,7 @@ export function DonorsContactDrawer(props) {
   (
     <>
       <Button type="link" onClick={openDrawer}>
-              View
+              Update
       </Button>
 
       <Popconfirm

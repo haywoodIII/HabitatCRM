@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HabitatCRM.Data;
 using HabitatCRM.Entities;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Routing;
 
 namespace HabitatCRM.Controllers
 {
@@ -71,6 +72,42 @@ namespace HabitatCRM.Controllers
                 }
             }
 
+            return NoContent();
+        }
+
+        [ODataRoute("({key})")]
+        [HttpPatch]
+        public async Task<IActionResult> PatchDonation([FromODataUri] Guid key, [FromBody] Delta<Donation> donation)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var entity = await _context.Donation.FindAsync(key);
+
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            donation.Patch(entity);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DonationExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return NoContent();
         }
 
