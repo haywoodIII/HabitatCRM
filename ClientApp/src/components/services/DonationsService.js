@@ -55,8 +55,9 @@ export async function postDonation(donorId, donation = {}) {
 export async function updateDonation(donation = {}) {
 
     const jwt = await auth.getJwtSilent();
-    delete donation.isUpdated;
-    delete donation.campaign;
+    const donationDto = {...donation}
+    delete donationDto.isUpdated;
+    delete donationDto.campaign;
 
     let response = await fetch(`${baseUrl}(${donation.donationId})`, {
         method: 'PATCH',
@@ -64,7 +65,7 @@ export async function updateDonation(donation = {}) {
             'Authorization': `Bearer ${jwt.accessToken}`,
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(donation)
+        body: JSON.stringify(donationDto)
     });
 
 

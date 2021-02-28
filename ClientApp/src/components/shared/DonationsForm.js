@@ -55,7 +55,7 @@ export function DonationsForm(props){
     const onFinish = async donation => {
         if (donation?.isUpdated) {
             await updateDonation(donation);
-            props.updateDonation(donation);
+           
         }
         else {
             addDonation(donation);
@@ -74,8 +74,9 @@ export function DonationsForm(props){
 
     const updateDonation = async donation => {
         try {
-            await donationService.updateDonation(donation)
+            let r = await donationService.updateDonation(donation)
             .then(form.resetFields());
+            props.updateDonation(r);
             message.success(`Updating donation`)
         } catch(error){
             message.error('Sorry, something went wrong... contact system administrator');

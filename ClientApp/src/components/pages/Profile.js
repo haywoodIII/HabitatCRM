@@ -35,7 +35,7 @@ const { Title, Paragraph, Text } = Typography;
 const { Column, ColumnGroup } = Table;
 
 export function Profile(props) {
-    const donor = props.location.state.donor;
+    let donor = props.location.state.donor;
     const campaigns = props.location.state.campaigns;
     const address = donor?.address;
     const fullAddress = `${address.street} ${address.city}, ${address.state} ${address.zip}`;
@@ -259,6 +259,7 @@ function TimelineCard(props) {
             if (el.donationId === donation.donationId)
             {
                 donation.campaign = updatedCampaign[0];
+                donation.campaignId = updatedCampaign[0].campaignId;
                 return {...donation}
             }
             return el
