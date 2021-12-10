@@ -14,47 +14,48 @@ namespace HabitatCRM.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DonationsController : ControllerBase
+    public class NotesController : ControllerBase
     {
         private readonly HabitatCRMContext _context;
 
-        public DonationsController(HabitatCRMContext context)
+        public NotesController(HabitatCRMContext context)
         {
             _context = context;
         }
 
         [HttpGet]
         [EnableQuery()]
-        public IQueryable GetCampaigns()
+        public IQueryable GetNotes()
         {
-            return _context.Donation
+            return _context.Note
                 .AsQueryable();
         }
 
-        // GET: api/Donations/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<List<Donation>>> GetDonations(Guid id)
-        {
-            var donations = (from dr in _context.Donor
-                             join don in _context.Donation
-                             on dr.DonorId equals don.DonorId
-                             where dr.DonorId == id
-                             select new Donation { CreatedDate = don.CreatedDate, Amount = don.Amount }).ToListAsync();
+        [ODataRoute("{id}")]
 
-            return Ok(donations);
+        public async Task<ActionResult<Note>> Get([FromODataUri] Guid key)
+        {
+            var note = await _context.Note.FindAsync(key);
+
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            return note;
         }
 
-        // PUT: api/Donations/5
+        // PUT: api/Notes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDonation(Guid id, Donation donation)
+        [HttpPut("{key}")]
+        public async Task<IActionResult> PutNote(Guid id, Note note)
         {
-            if (id != donation.DonationId)
+            if (id != note.NoteId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(donation).State = EntityState.Modified;
+            _context.Entry(note).State = EntityState.Modified;
 
             try
             {
@@ -62,7 +63,7 @@ namespace HabitatCRM.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DonationExists(id))
+                if (!NoteExists(id))
                 {
                     return NotFound();
                 }
@@ -77,21 +78,21 @@ namespace HabitatCRM.Controllers
 
         [ODataRoute("({key})")]
         [HttpPatch]
-        public async Task<IActionResult> PatchDonation([FromODataUri] Guid key, [FromBody] Delta<Donation> donation)
+        public async Task<IActionResult> PatchNote([FromODataUri] Guid key, [FromBody] Delta<Note> note)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var entity = await _context.Donation.FindAsync(key);
+            var entity = await _context.Note.FindAsync(key);
 
             if (entity == null)
             {
                 return NotFound();
             }
 
-            donation.Patch(entity);
+            note.Patch(entity);
 
             try
             {
@@ -99,7 +100,7 @@ namespace HabitatCRM.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DonationExists(key))
+                if (!NoteExists(key))
                 {
                     return NotFound();
                 }
@@ -111,36 +112,36 @@ namespace HabitatCRM.Controllers
             return NoContent();
         }
 
-        // POST: api/Donations
+        // POST: api/Notes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Donation>> PostDonation(Donation donation)
+        public async Task<ActionResult<Note>> PostNote(Note note)
         {
-            _context.Donation.Add(donation);
+            _context.Note.Add(note);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDonation", new { id = donation.DonationId }, donation);
+            return CreatedAtAction("GetNote", new { id = note.NoteId }, note);
         }
 
-        // DELETE: api/Donations/5
+        // DELETE: api/Notes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDonation(Guid id)
+        public async Task<IActionResult> DeleteNote(Guid id)
         {
-            var donation = await _context.Donation.FindAsync(id);
-            if (donation == null)
+            var note = await _context.Note.FindAsync(id);
+            if (note == null)
             {
                 return NotFound();
             }
 
-            _context.Donation.Remove(donation);
+            _context.Note.Remove(note);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool DonationExists(Guid id)
+        private bool NoteExists(Guid id)
         {
-            return _context.Donation.Any(e => e.DonationId == id);
+            return _context.Note.Any(e => e.NoteId == id);
         }
     }
 }

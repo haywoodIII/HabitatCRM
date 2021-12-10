@@ -16,6 +16,7 @@ export function DonationsModal(props) {
             Add Donation
         </Button>
         <Modal
+             width={800}
             visible={modalVisible}
             onCancel={handleModalCancel}
             footer={[

@@ -16,6 +16,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.AspNet.OData.Builder;
 using HabitatCRM.Entities;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 namespace HabitatCRM
 {
@@ -37,6 +38,8 @@ namespace HabitatCRM
                  .AddNewtonsoftJson(options =>
                  options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                  .AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault);
+            services.AddLogging();
+            services.Configure<AzureFileLoggerOptions>(Configuration.GetSection("AzureLogging"));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -91,6 +94,15 @@ namespace HabitatCRM
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            // Apply migrations in dev
+            if (env.IsDevelopment())
+            {
+                using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    scope.ServiceProvider.GetService<HabitatCRMContext>().Database.Migrate();
+                }
+            }
         }
 
         private IEdmModel GetEdmModel()
@@ -102,6 +114,8 @@ namespace HabitatCRM
             odataBuilder.EntitySet<Address>("Addresses");
             odataBuilder.EntitySet<Donation>("Donations");
             odataBuilder.EntitySet<Campaign>("Campaigns");
+            odataBuilder.EntitySet<Note>("Notes");
+            odataBuilder.EntitySet<DonorContact>("DonorContacts");
 
             return odataBuilder.GetEdmModel();
         }

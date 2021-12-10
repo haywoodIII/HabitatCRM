@@ -16,6 +16,8 @@ namespace HabitatCRM.Entities
         public decimal Amount { get; set; }
         public Guid DonorId { get; set; }
         public Donor Donor { get; set; }
+        public DateTime? Date { get; set; }
+
 
         public Campaign Campaign { get; set; }
         public Guid? CampaignId { get; set; }

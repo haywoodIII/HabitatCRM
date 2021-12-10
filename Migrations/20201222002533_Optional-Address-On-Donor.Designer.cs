@@ -4,14 +4,16 @@ using HabitatCRM.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HabitatCRM.Migrations
 {
     [DbContext(typeof(HabitatCRMContext))]
-    partial class HabitatCRMContextModelSnapshot : ModelSnapshot
+    [Migration("20201222002533_Optional-Address-On-Donor")]
+    partial class OptionalAddressOnDonor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,6 +35,9 @@ namespace HabitatCRM.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<Guid?>("DonorContactId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("DonorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -51,6 +56,10 @@ namespace HabitatCRM.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AddressId");
+
+                    b.HasIndex("DonorContactId")
+                        .IsUnique()
+                        .HasFilter("[DonorContactId] IS NOT NULL");
 
                     b.HasIndex("DonorId")
                         .IsUnique()
@@ -198,9 +207,6 @@ namespace HabitatCRM.Migrations
                     b.Property<int?>("Age")
                         .HasColumnType("int");
 
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -223,16 +229,7 @@ namespace HabitatCRM.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Tags")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Zip")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DonorContactId");
@@ -298,11 +295,17 @@ namespace HabitatCRM.Migrations
 
             modelBuilder.Entity("HabitatCRM.Entities.Address", b =>
                 {
+                    b.HasOne("HabitatCRM.Entities.DonorContact", "DonorContact")
+                        .WithOne("Address")
+                        .HasForeignKey("HabitatCRM.Entities.Address", "DonorContactId");
+
                     b.HasOne("HabitatCRM.Entities.Donor", "Donor")
                         .WithOne("Address")
                         .HasForeignKey("HabitatCRM.Entities.Address", "DonorId");
 
                     b.Navigation("Donor");
+
+                    b.Navigation("DonorContact");
                 });
 
             modelBuilder.Entity("HabitatCRM.Entities.Campaign", b =>
@@ -386,6 +389,11 @@ namespace HabitatCRM.Migrations
                     b.Navigation("DonorContacts");
 
                     b.Navigation("Note");
+                });
+
+            modelBuilder.Entity("HabitatCRM.Entities.DonorContact", b =>
+                {
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("HabitatCRM.Entities.Organization", b =>

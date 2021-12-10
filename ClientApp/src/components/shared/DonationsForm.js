@@ -1,17 +1,18 @@
-﻿import React from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Form, 
     InputNumber, 
+    DatePicker,
     Button,
     message,
     Select } from 'antd';
 
-import { postDonation } from '../services/DonationsService';
+import * as donationService from '../services/DonationsService';
 
 const { Option, OptGroup } = Select;
 
 const layout = {
     labelCol: {
-        span: 5,
+        span: 50,
     },
     wrapperCol: {
         span: 16,
@@ -19,6 +20,7 @@ const layout = {
 };
 
 const tailLayout = {
+
     wrapperCol: {
         span: 16,
     },
@@ -39,16 +41,50 @@ const validateMessages = {
 export function DonationsForm(props){
 
     const [form] = Form.useForm();
+    const [isEditMode, isUpdateable]  = useState(false);
+  
+    useEffect(() => {
+        form.setFieldsValue(props.selected)
+
+        if (props.selected?.isUpdated === true){
+            isUpdateable(true);
+        }
+
+       }, [form, props.selected])
 
     const onFinish = async donation => {
+        if (donation?.isUpdated) {
+            await updateDonation(donation);
+           
+        }
+        else {
+            addDonation(donation);
+        }
+    }
+
+    const addDonation = async donation => {
         try {
-            await postDonation(props.donorId, donation)
+            await donationService.postDonation(props.donorId, donation)
             .then(form.resetFields());
             message.success(`Adding a $${donation.amount} donation`)
-        }catch(error){
+        } catch(error){
             message.error('Sorry, something went wrong... contact system administrator');
         }
     }
+
+    const updateDonation = async donation => {
+        try {
+            let r = await donationService.updateDonation(donation)
+            .then(form.resetFields());
+            props.updateDonation(r);
+            message.success(`Updating donation`)
+        } catch(error){
+            message.error('Sorry, something went wrong... contact system administrator');
+        }
+    }
+
+
+
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
         };
@@ -57,15 +93,12 @@ export function DonationsForm(props){
         <Form
         {...layout}
         name="donationsForm"
-        initialValues={{
-          remember: true,
-        }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         validateMessages={validateMessages}
         form={form}
       >
-
+          
         <Form.Item label="Amount:" name='amount' rules={[{ type: 'number', required: true }]}>
             <InputNumber
                 min={0}
@@ -74,11 +107,15 @@ export function DonationsForm(props){
             />
         </Form.Item>
 
+        <Form.Item label="Date:" name='date' required={true}>
+            <DatePicker />
+        </Form.Item>
+
         <Form.Item label="Campaign:" name='campaignId'>
-            <Select style={{ width: 120 }}
+            <Select
+            style={{width: 150}}
             placeholder="Not Required..."
             showSearch
-            style={{ width: 200 }}
             optionFilterProp="children"
             >
                 <>
@@ -90,10 +127,19 @@ export function DonationsForm(props){
             </Select>
         </Form.Item>
   
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit" style={{position: "absolute", top: 25}}>
+        <Form.Item {...tailLayout} style={{paddingLeft: 20}}>
+          <Button type="primary" htmlType="submit" disabled={!isEditMode}>
             Submit
           </Button>
+        </Form.Item>
+
+        <Form.Item name='isUpdated' hidden={true}>
+        </Form.Item>
+
+        <Form.Item name='donationId' hidden={true}>
+        </Form.Item>
+
+        <Form.Item name='campaign' hidden={true}>
         </Form.Item>
 
       </Form>

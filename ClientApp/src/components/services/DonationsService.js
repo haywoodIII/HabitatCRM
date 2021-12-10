@@ -18,10 +18,22 @@ export async function getDonation() {
     return donor;
 }
 
+export async function getDonations(donorId) {
+    const jwt = await auth.getJwtSilent();
+
+    const response = await fetch(`${baseUrl}/${donorId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${jwt.accessToken}`,
+          },    
+    });
+    const donations = await response.json();
+    return donations;
+}
+
 export async function postDonation(donorId, donation = {}) {
     const jwt = await auth.getJwtSilent();
     const organizationId = auth.getOrganizationId(jwt);
-
     donation.donorId = donorId;   
     donation.donationId = helpers.uuidv4();
     donation.organizationId = organizationId;
@@ -38,4 +50,28 @@ export async function postDonation(donorId, donation = {}) {
     if(!response.ok) {
         throw new Error('Something went wrong.');
     } 
+}
+
+export async function updateDonation(donation = {}) {
+
+    const jwt = await auth.getJwtSilent();
+    const donationDto = {...donation}
+    delete donationDto.isUpdated;
+    delete donationDto.campaign;
+
+    let response = await fetch(`${baseUrl}(${donation.donationId})`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${jwt.accessToken}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(donationDto)
+    });
+
+
+    if (!response.ok) {
+        throw new Error('Something went wrong.');
+    } 
+
+    return donation;
 }

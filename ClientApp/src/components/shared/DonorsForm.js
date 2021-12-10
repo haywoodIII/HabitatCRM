@@ -74,7 +74,7 @@ function GenderSelect() {
   );
 }
 
-function AddressSelect() {
+export function AddressSelect() {
   const statesSelect = states.map((states) => 
   <Option key={states.short} value={states.short}>{states.name}</Option>
 );
@@ -101,6 +101,7 @@ function AddressSelect() {
         </Form.Item>
 
         <Form.Item
+          initialValue="New York"
           name={['address', 'state']}
           noStyle
           rules={[{ required: true, message: 'State is required' }]}
@@ -138,7 +139,9 @@ export function DonorsForm(props) {
 
   const onFinish = async donor => {
 
-    if (props.addOrUpdate == "Add") {
+    donor.type = props.donorType;
+    
+    if (props.addOrUpdate === "Add") {
       try {
           await donorsService.postDonor(donor)
           .then(form.resetFields());
@@ -148,7 +151,7 @@ export function DonorsForm(props) {
           message.error('Sorry, something went wrong... contact system administrator');
         }
 
-    } else if (props.addOrUpdate == "Update") {
+    } else if (props.addOrUpdate === "Update") {
 
       try {
             const updatedDonor = await donorsService.updateDonor(donor)
@@ -174,29 +177,19 @@ export function DonorsForm(props) {
       <Form.Item name='email' label="Email" rules={[{ type: 'email', required: true }]}>
           <Input />
       </Form.Item>
+      
+      {props.donorType === "Individual" &&
       <Form.Item name='age' label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
           <InputNumber  min={0}/>
       </Form.Item>
-      <AddressSelect/>
-      <GenderSelect/>
-      <Form.Item
-        name='type'
-        label="Donor Type:"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <Select
-          placeholder="Select..."
-          allowClear
-        >
-          <Option value="Individual">Individual</Option>
-          <Option value="Business">Business</Option>
-        </Select>
-      </Form.Item>
+      }
 
+      <AddressSelect/>
+
+      {props.donorType === "Individual" &&
+        <GenderSelect/>
+      }
+    
       <Form.Item
       name='phone'
       label="Phone Number"

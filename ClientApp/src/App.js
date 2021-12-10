@@ -28,9 +28,9 @@ export default function App() {
     return (
       <Layout>
         <AuthenticatedTemplate>
-        <Route exact path='/' component={Home} />
-        <Route path='/donors' component={DonorsPage} />
-        <Route path='/profile/:id' component={Profile} />
+          <Route exact path='/' component={Home} />
+          <Route path='/donors' component={DonorsPage} />
+          <Route path='/profile/:id' component={Profile} />
         </AuthenticatedTemplate>
       </Layout>
     );

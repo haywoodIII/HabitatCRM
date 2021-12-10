@@ -7,10 +7,20 @@ using System.Threading.Tasks;
 
 namespace HabitatCRM.Entities
 {
-    public class Address
+    public class DonorContact
     {
         [Key]
-        public Guid AddressId { get; set; }
+        public Guid DonorContactId { get; set; }
+
+        public string Tags { get; set; }
+
+        public string Name { get; set; }
+
+        public int? Age { get; set; }
+
+        public string Phone { get; set; }
+
+        public string Email { get; set; }
 
         public string Street { get; set; }
 
@@ -19,7 +29,6 @@ namespace HabitatCRM.Entities
         public string State { get; set; }
 
         public string Zip { get; set; }
-
 
         public Guid? DonorId { get; set; }
         public Donor Donor { get; set; }
